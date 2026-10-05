@@ -31,7 +31,8 @@ struct PlanTodaysRoundUseCaseTests {
         let round = try planTodaysRound.execute(on: CaseloadFixtures.startOfShift, now: CaseloadFixtures.tuesday(hour: 8, minute: 50))
 
         // --- THEN ---
-        #expect(round.outstandingVisits.map { $0.id } == [nineAM.id, elevenAM.id])
+        let outstandingVisitIDs = round.outstandingVisits.map { $0.id }
+        #expect(outstandingVisitIDs == [nineAM.id, elevenAM.id], "9:00 must come before 11:00")
         #expect(round.nextVisit?.patientName == "Margaret Thompson")
         #expect(round.closedVisits.count == 1)
         #expect(round.progressSummary == "1 of 3 visits closed")
