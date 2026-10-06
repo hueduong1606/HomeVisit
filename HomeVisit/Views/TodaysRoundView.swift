@@ -1,18 +1,17 @@
 //  TodaysRoundView.swift
 //  HomeVisit
 //
-//  Screen 1 – the nurse's day: visits still to do in driving order,
-//  outcome-overdue warnings, and the visits already documented.
+
 
 import SwiftUI
 
 struct TodaysRoundView: View {
 
-    //MARK: - PROPERTIES
+    //PROPERTIES
     @ObservedObject var viewModel: TodaysRoundViewModel
     @State private var showScheduleVisitView = false
 
-    //MARK: - BODY
+    // BODY
     var body: some View {
         NavigationView {
             ZStack(alignment: .top) {
@@ -92,7 +91,7 @@ struct TodaysRoundView: View {
     }
 }
 
-//MARK: - PREVIEW
+// PREVIEW
 struct TodaysRoundView_Previews: PreviewProvider {
     static var previews: some View {
         TodaysRoundView(viewModel: TodaysRoundViewModel(dependencies: .preview))

@@ -1,13 +1,6 @@
 //  NotificationViewController.swift
 //  VisitReminderNotification (Notification Content Extension)
 //
-//  User scenario: 15 minutes before each visit the nurse gets a reminder.
-//  Pressing and holding it shows VisitReminderCardView instead of the plain
-//  notification, so she can check the address and safety alert
-//  (e.g. "Dog on premises – call ahead") before getting out of the car.
-//
-//  Handles notifications whose category is VISIT_REMINDER
-//  (see Config/VisitReminderNotification-Info.plist).
 
 import UIKit
 import SwiftUI
@@ -16,7 +9,7 @@ import UserNotificationsUI
 
 class NotificationViewController: UIViewController, UNNotificationContentExtension {
 
-    //MARK: - UNNotificationContentExtension
+    // UNNotificationContentExtension
     // Called by iOS with the reminder that was opened
     func didReceive(_ notification: UNNotification) {
         guard let payload = VisitReminderPayload(userInfo: notification.request.content.userInfo) else {

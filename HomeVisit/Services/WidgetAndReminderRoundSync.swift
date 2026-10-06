@@ -1,26 +1,21 @@
 //  WidgetAndReminderRoundSync.swift
 //  HomeVisit
 //
-//  Keeps everything OUTSIDE the app in step with today's round:
-//  1. saves a RoundSnapshot into the App Group for the NextVisitWidget
-//  2. asks WidgetKit to reload the widget
-//  3. reschedules the visit reminder notifications (today and the coming days)
-//  Use Cases only call this after a successful save.
 
 import Foundation
 import WidgetKit
 
 class WidgetAndReminderRoundSync: RoundSyncing {
 
-    //MARK: - PROPERTIES
+    //PROPERTIES
     private let repository: CaseloadRepository
 
-    //MARK: - INITIALIZER
+    //INITIALIZER
     init(repository: CaseloadRepository) {
         self.repository = repository
     }
 
-    //MARK: - FUNCTION
+    //FUNCTION
     func roundDidChange() {
         // If today's round can't be read, keep the widget and reminders the nurse already has
         let todaysVisits: [CareVisit]

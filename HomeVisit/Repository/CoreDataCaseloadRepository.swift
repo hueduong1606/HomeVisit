@@ -1,23 +1,21 @@
 //  CoreDataCaseloadRepository.swift
 //  HomeVisit
 //
-//  Core Data implementation of CaseloadRepository.
-//  This is the only type in the app that creates fetch requests or saves the context.
 
 import Foundation
 import CoreData
 
 class CoreDataCaseloadRepository: CaseloadRepository {
 
-    //MARK: - PROPERTIES
+    //PROPERTIES
     private let context: NSManagedObjectContext // Scratchpad for fetching and saving
 
-    //MARK: - INITIALIZER
+    // INITIALIZER
     init(persistenceController: PersistenceController = .shared) {
         self.context = persistenceController.container.viewContext
     }
 
-    //MARK: - PATIENTS
+    // PATIENTS
 
     // Whole caseload, alphabetical by name
     func fetchPatients() throws -> [Patient] {
@@ -41,7 +39,7 @@ class CoreDataCaseloadRepository: CaseloadRepository {
         try saveContext()
     }
 
-    //MARK: - VISITS
+    //VISITS
 
     func findVisit(id: UUID) throws -> CareVisit? {
         guard let visitRecord = try findVisitRecord(id: id) else { return nil }
@@ -102,10 +100,8 @@ class CoreDataCaseloadRepository: CaseloadRepository {
         try saveContext()
     }
 
-    //MARK: - PRIVATE HELPERS
-
-    // Saves the context. If Core Data rejects the save, the unsaved changes are
-    // undone so the store stays consistent, and the error is passed to the Use Case.
+    //PRIVATE HELPERS
+    // Saves the context. If Core Data rejects the save, the unsaved changes are undone so the store stays consistent, and the error is passed to the Use Case.
     private func saveContext() throws {
         do {
             try context.save()
@@ -115,7 +111,7 @@ class CoreDataCaseloadRepository: CaseloadRepository {
         }
     }
 
-    // Midnight-to-midnight range for a calendar day (correct on daylight-saving days)
+    // Midnight-to-midnight range for a calendar day
     private func dayBoundaries(for day: Date) -> (Date, Date) {
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: day)

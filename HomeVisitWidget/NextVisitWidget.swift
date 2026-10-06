@@ -1,17 +1,11 @@
 //  NextVisitWidget.swift
 //  NextVisitWidget (WidgetKit extension)
 //
-//  User scenario: between homes, the nurse needs the next visit time and address
-//  at a glance – on the Lock Screen while the phone sits in the car cradle,
-//  or on the Home Screen – without opening the app.
-//
-//  Data source: TodaysRound.json in the App Group container, written by the app
-//  after every change to the round (WidgetAndReminderRoundSync).
 
 import WidgetKit
 import SwiftUI
 
-// MARK: - NextVisitEntry
+//  NextVisitEntry
 struct NextVisitEntry: TimelineEntry {
     let date: Date
     let snapshot: RoundSnapshot?
@@ -23,7 +17,7 @@ struct NextVisitEntry: TimelineEntry {
     }
 }
 
-// MARK: - NextVisitProvider
+//  NextVisitProvider
 struct NextVisitProvider: TimelineProvider {
 
     // Shown while the widget loads for the first time
@@ -46,14 +40,14 @@ struct NextVisitProvider: TimelineProvider {
     }
 }
 
-// MARK: - NextVisitWidgetView
+// NextVisitWidgetView
 struct NextVisitWidgetView: View {
 
     //MARK: - PROPERTIES
     let entry: NextVisitEntry
     @Environment(\.widgetFamily) var family
 
-    //MARK: - BODY
+    //BODY
     var body: some View {
         if let snapshot = entry.todaysSnapshot, let nextVisit = snapshot.nextVisit {
             // There is a visit still to do
@@ -100,7 +94,7 @@ struct NextVisitWidgetView: View {
         }
     }
 
-    //MARK: - EMPTY STATES
+    // EMPTY STATES
     var statusHeadline: String {
         guard let snapshot = entry.todaysSnapshot else { return "Open HomeVisit" }
         return snapshot.totalVisitCount == 0 ? "No visits today" : "Round complete"
@@ -115,7 +109,7 @@ struct NextVisitWidgetView: View {
     }
 }
 
-// MARK: - NextVisitWidget
+//NextVisitWidget
 struct NextVisitWidget: Widget {
     let kind: String = "NextVisitWidget"
 
@@ -130,7 +124,7 @@ struct NextVisitWidget: Widget {
     }
 }
 
-//MARK: - PREVIEW
+// PREVIEW
 struct NextVisitWidget_Previews: PreviewProvider {
     static var previews: some View {
         NextVisitWidgetView(entry: NextVisitEntry(date: Date(), snapshot: RoundSnapshot.sample))

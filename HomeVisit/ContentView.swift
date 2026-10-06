@@ -1,14 +1,12 @@
 //  ContentView.swift
 //  HomeVisit
 //
-//  Two tabs that follow the nurse's working day:
-//  Today's Round (drive and document) and Caseload (referrals and patients).
 
 import SwiftUI
 
 struct ContentView: View {
 
-    //MARK: - PROPERTIES
+    //PROPERTIES
     @StateObject var roundViewModel: TodaysRoundViewModel
     @StateObject var caseloadViewModel: CaseloadViewModel
     let dependencies: AppDependencies
@@ -16,14 +14,14 @@ struct ContentView: View {
     // Tells us when the nurse comes back to the app (e.g. after sharing a referral)
     @Environment(\.scenePhase) var scenePhase
 
-    //MARK: - INITIALIZER
+    //INITIALIZER
     init(dependencies: AppDependencies = .live) {
         self.dependencies = dependencies
         _roundViewModel = StateObject(wrappedValue: TodaysRoundViewModel(dependencies: dependencies))
         _caseloadViewModel = StateObject(wrappedValue: CaseloadViewModel(dependencies: dependencies))
     }
 
-    //MARK: - BODY
+    // BODY
     var body: some View {
         TabView {
             TodaysRoundView(viewModel: roundViewModel)
@@ -58,7 +56,7 @@ struct ContentView: View {
     }
 }
 
-//MARK: - PREVIEW
+//PREVIEW
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView(dependencies: .preview)

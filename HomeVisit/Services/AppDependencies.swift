@@ -8,7 +8,7 @@ import Foundation
 
 class AppDependencies {
 
-    //MARK: - SHARED INSTANCES
+    //SHARED INSTANCES
     // Real Core Data store in the App Group container
     static let live = AppDependencies(
         repository: CoreDataCaseloadRepository(persistenceController: .shared),
@@ -23,12 +23,12 @@ class AppDependencies {
         referralInbox: PreviewReferralInbox()
     )
 
-    //MARK: - PROPERTIES
+    //PROPERTIES
     let repository: CaseloadRepository
     let roundSync: RoundSyncing
     let referralInbox: ReferralInbox
 
-    //MARK: - INITIALIZER
+    //INITIALIZER
     // When no roundSync is given, the real widget + reminder sync is used
     init(repository: CaseloadRepository, roundSync: RoundSyncing?, referralInbox: ReferralInbox) {
         self.repository = repository
@@ -36,7 +36,7 @@ class AppDependencies {
         self.referralInbox = referralInbox
     }
 
-    //MARK: - USE CASES
+    //USE CASES
     func makePlanTodaysRound() -> PlanTodaysRoundUseCase {
         PlanTodaysRoundUseCase(repository: repository)
     }

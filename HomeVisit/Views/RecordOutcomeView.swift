@@ -1,27 +1,25 @@
 //  RecordOutcomeView.swift
 //  HomeVisit
 //
-//  Screen 3 – document the visit at the door: care completed (clinical note)
-//  or no access (reason). The rules live in RecordVisitOutcomeUseCase.
 
 import SwiftUI
 
 struct RecordOutcomeView: View {
 
-    //MARK: - PROPERTIES
+    // PROPERTIES
     @StateObject var viewModel: RecordOutcomeViewModel
     var onOutcomeSaved: (CareVisit) -> Void
 
     // A binding to the presentation mode, used to dismiss the sheet
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
-    //MARK: - INITIALIZER
+    //INITIALIZER
     init(viewModel: RecordOutcomeViewModel, onOutcomeSaved: @escaping (CareVisit) -> Void) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.onOutcomeSaved = onOutcomeSaved
     }
 
-    //MARK: - BODY
+    // BODY
     var body: some View {
         NavigationView {
             ZStack(alignment: .top) {
@@ -67,7 +65,7 @@ struct RecordOutcomeView: View {
     }
 }
 
-//MARK: - PREVIEW
+// PREVIEW
 struct RecordOutcomeView_Previews: PreviewProvider {
     static var previews: some View {
         let sampleVisit = CareVisit(

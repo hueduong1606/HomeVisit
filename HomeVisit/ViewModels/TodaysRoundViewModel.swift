@@ -1,14 +1,12 @@
 //  TodaysRoundViewModel.swift
 //  HomeVisit
 //
-//  Single source of truth for the Today's Round screen.
-//  Talks only to Use Cases – never to Core Data.
 
 import Foundation
 
 class TodaysRoundViewModel: ObservableObject {
 
-    //MARK: - PROPERTIES
+    //MPROPERTIES
     // Published properties trigger a SwiftUI redraw whenever they change
     @Published var round: TodaysRound? = nil
     @Published var errorMessage: String? = nil
@@ -16,13 +14,13 @@ class TodaysRoundViewModel: ObservableObject {
     let dependencies: AppDependencies
     private let planTodaysRound: PlanTodaysRoundUseCase
 
-    //MARK: - INITIALIZER
+    // INITIALIZER
     init(dependencies: AppDependencies = .live) {
         self.dependencies = dependencies
         self.planTodaysRound = dependencies.makePlanTodaysRound()
     }
 
-    //MARK: - COMPUTED PROPERTIES
+   
     var outstandingVisits: [CareVisit] {
         round?.outstandingVisits ?? []
     }
@@ -47,7 +45,7 @@ class TodaysRoundViewModel: ObservableObject {
         return "Round complete – every visit today is documented."
     }
 
-    //MARK: - FUNCTIONS
+    //FUNCTIONS
 
     // Loads today's visits through PlanTodaysRoundUseCase
     func loadRound() {

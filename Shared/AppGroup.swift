@@ -1,16 +1,12 @@
 //  AppGroup.swift
 //  Shared by: HomeVisit app, NextVisitWidget, ReferralShareExtension, VisitReminderNotification
 //
-//  The App Group is the shared container that lets the app and its extensions
-//  exchange data (today's round for the widget, referrals from the share sheet).
 
 import Foundation
 
-// MARK: - AppGroup
+//AppGroup
 enum AppGroup {
-    //MARK: - PROPERTIES
-    // ⚠️ Must match the App Group in Config/HomeVisit.entitlements,
-    //    Config/NextVisitWidget.entitlements and Config/ReferralShareExtension.entitlements
+    //PROPERTIES
     static let identifier = "group.com.heather.HomeVisit"
 
     // Folder shared by the app and the extensions – nil when the App Group is not set up
@@ -18,7 +14,7 @@ enum AppGroup {
         FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier)
     }
 
-    //MARK: - FILE LOCATIONS
+    //FILE LOCATIONS
     // Core Data store (nil = App Group missing, Core Data then uses its default location)
     static var caseloadStoreURL: URL? {
         containerURL?.appendingPathComponent("HomeVisit.sqlite")
@@ -37,10 +33,7 @@ enum AppGroup {
     }
 }
 
-// MARK: - ReferralSharingError
-/// Encountered by: the community nurse when she shares a referral into HomeVisit from
-/// another app (share sheet), or opens the Caseload tab to see "Referrals waiting".
-/// Each message says what happened to the referral and how she can carry on.
+//  ReferralSharingError
 enum ReferralSharingError: LocalizedError, Equatable {
     case sharingUnavailableOnThisDevice   // The shared space between the app and its extensions is missing
     case referralsWaitingUnreadable       // The referrals waiting list exists but cannot be opened

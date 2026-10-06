@@ -1,21 +1,16 @@
 //  TodaysRound.swift
 //  HomeVisit
 //
-//  The nurse's plan for one working day: who is still to be seen, who has been seen,
-//  and which visits have an overdue outcome.
 
 import Foundation
 
-/// The community nurse's plan for one working day.
-/// Business Rule: visits still to do are listed in time order – the order the nurse drives the round.
 struct TodaysRound {
-    //MARK: - PROPERTIES
+    //PROPERTIES
     let outstandingVisits: [CareVisit]     // Still to visit, earliest first
     let closedVisits: [CareVisit]          // Completed or no access
     let outcomeOverdueVisitIDs: [UUID]     // Past their planned finish time with no outcome recorded
     let comingUpVisits: [CareVisit]        // Booked for the coming days, earliest first
 
-    //MARK: - COMPUTED PROPERTIES
     // The visit the nurse should drive to next
     var nextVisit: CareVisit? {
         outstandingVisits.first
@@ -25,12 +20,12 @@ struct TodaysRound {
         outstandingVisits.count + closedVisits.count
     }
 
-    // e.g. "3 of 7 visits done"
+    //Visits done"
     var progressSummary: String {
         "\(closedVisits.count) of \(totalVisitCount) visits done"
     }
 
-    //MARK: - FUNCTION
+    //FUNCTION
     func isOutcomeOverdue(_ visit: CareVisit) -> Bool {
         outcomeOverdueVisitIDs.contains(visit.id)
     }

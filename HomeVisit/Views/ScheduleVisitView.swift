@@ -1,23 +1,22 @@
 //  ScheduleVisitView.swift
 //  HomeVisit
 //
-//  Screen 4 – add a home visit to the round.
-//  The rules (no clashes, safe duration, not in the past) live in ScheduleHomeVisitUseCase.
+
 
 import SwiftUI
 
 struct ScheduleVisitView: View {
 
-    //MARK: - PROPERTIES
+    // PROPERTIES
     @StateObject var viewModel: ScheduleVisitViewModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
-    //MARK: - INITIALIZER
+    //INITIALIZER
     init(viewModel: ScheduleVisitViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
-    //MARK: - BODY
+    //BODY
     var body: some View {
         NavigationView {
             ZStack(alignment: .top) {
@@ -71,7 +70,7 @@ struct ScheduleVisitView: View {
     }
 }
 
-//MARK: - PREVIEW
+// PREVIEW
 struct ScheduleVisitView_Previews: PreviewProvider {
     static var previews: some View {
         ScheduleVisitView(viewModel: ScheduleVisitViewModel(dependencies: .preview))

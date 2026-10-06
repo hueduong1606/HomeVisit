@@ -1,13 +1,11 @@
 //  VisitStatus.swift
 //  HomeVisit
 //
-//  Where a home visit is in its lifecycle, and the outcome a nurse can record.
 
 import Foundation
 
-// MARK: - VisitStatus
-/// Where a home visit is in its lifecycle.
-/// Business Rule: once a visit is closed (completed or no access), its outcome is part of the clinical record.
+//VisitStatus
+
 enum VisitStatus: String {
     case scheduled = "Scheduled"   // On the round, not yet documented
     case completed = "Completed"   // Care delivered and clinical note written
@@ -19,8 +17,8 @@ enum VisitStatus: String {
     }
 }
 
-// MARK: - VisitOutcome
-/// The two outcomes a nurse records at the door of the patient's home.
+// VisitOutcome
+
 enum VisitOutcome: String, CaseIterable, Identifiable {
     case completed = "Care completed"
     case noAccess = "No access"

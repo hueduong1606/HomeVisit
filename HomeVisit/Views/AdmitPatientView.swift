@@ -1,23 +1,21 @@
 //  AdmitPatientView.swift
 //  HomeVisit
 //
-//  Screen 6 – admit a patient to the caseload, typed in by hand
-//  or pre-filled from a referral shared into HomeVisit.
 
 import SwiftUI
 
 struct AdmitPatientView: View {
 
-    //MARK: - PROPERTIES
+    //PROPERTIES
     @StateObject var viewModel: AdmitPatientViewModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
-    //MARK: - INITIALIZER
+    //INITIALIZER
     init(viewModel: AdmitPatientViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
-    //MARK: - BODY
+    // BODY
     var body: some View {
         NavigationView {
             ZStack(alignment: .top) {
@@ -57,7 +55,7 @@ struct AdmitPatientView: View {
     }
 }
 
-//MARK: - PREVIEW
+// PREVIEW
 struct AdmitPatientView_Previews: PreviewProvider {
     static var previews: some View {
         AdmitPatientView(viewModel: AdmitPatientViewModel(dependencies: .preview))

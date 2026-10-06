@@ -1,16 +1,11 @@
 //  CareVisit.swift
 //  HomeVisit
 //
-//  One booked home visit on the nurse's round.
 
 import Foundation
 
-/// A single home visit booked on a community nurse's round.
-/// Business Rules:
-/// - Two visits clash when one starts before the other has finished; back-to-back visits do not clash.
-/// - The outcome is overdue once the planned finish time has passed and nothing has been recorded.
 struct CareVisit: Identifiable, Equatable {
-    //MARK: - PROPERTIES
+    //PROPERTIES
     let id: UUID
     let patientID: UUID
     var patientName: String
@@ -22,7 +17,7 @@ struct CareVisit: Identifiable, Equatable {
     var status: VisitStatus
     var outcomeNote: String
 
-    //MARK: - INITIALIZER
+    //INITIALIZER
     init(
         id: UUID = UUID(),
         patientID: UUID,
@@ -47,7 +42,6 @@ struct CareVisit: Identifiable, Equatable {
         self.outcomeNote = outcomeNote
     }
 
-    //MARK: - COMPUTED PROPERTIES
     // When the nurse expects to leave the home
     var scheduledEnd: Date {
         scheduledStart.addingTimeInterval(TimeInterval(durationMinutes * 60))
@@ -57,7 +51,7 @@ struct CareVisit: Identifiable, Equatable {
         !clinicalAlert.isEmpty
     }
 
-    //MARK: - FUNCTIONS
+    //FUNCTIONS
     // Two visits clash when one starts before the other has finished.
     // Back-to-back visits (one ends exactly when the next starts) do not clash.
     func clashes(with otherVisit: CareVisit) -> Bool {
@@ -65,7 +59,6 @@ struct CareVisit: Identifiable, Equatable {
     }
 
     // The outcome is overdue once the planned finish time has passed and nothing is recorded yet.
-    // (The app only knows what the nurse records – not whether she has arrived.)
     func isOutcomeOverdue(at now: Date) -> Bool {
         status == .scheduled && now > scheduledEnd
     }

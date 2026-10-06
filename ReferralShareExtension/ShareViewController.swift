@@ -1,10 +1,6 @@
 //  ShareViewController.swift
 //  ReferralShareExtension (Share Extension)
 //
-//  User scenario: a GP emails or messages a new referral. Instead of retyping it,
-//  the nurse selects the text, taps Share -> HomeVisit, adds the patient's name
-//  and saves it. The referral is written to the App Group container and appears
-//  under "Referrals waiting" on the app's Caseload screen.
 
 import UIKit
 import SwiftUI
@@ -12,17 +8,17 @@ import UniformTypeIdentifiers
 
 class ShareViewController: UIViewController {
 
-    //MARK: - PROPERTIES
+    //PROPERTIES
     let draft = ReferralDraft()
 
-    //MARK: - LIFECYCLE
+    //LIFECYCLE
     override func viewDidLoad() {
         super.viewDidLoad()
         showCaptureView()
         loadSharedText()
     }
 
-    //MARK: - UI
+    // UI
     // Shows the SwiftUI form inside the extension (UIKit -> SwiftUI bridge)
     func showCaptureView() {
         let captureView = ReferralCaptureView(
@@ -38,7 +34,7 @@ class ShareViewController: UIViewController {
         hostingController.didMove(toParent: self)
     }
 
-    //MARK: - READ THE SHARED TEXT
+    // READ THE SHARED TEXT
     func loadSharedText() {
         guard let extensionItem = extensionContext?.inputItems.first as? NSExtensionItem,
               let provider = extensionItem.attachments?.first,
@@ -55,7 +51,7 @@ class ShareViewController: UIViewController {
         }
     }
 
-    //MARK: - SAVE / CANCEL
+    //SAVE / CANCEL
 
     // Writes the referral to the App Group, then always closes the share sheet
     func saveReferral() {

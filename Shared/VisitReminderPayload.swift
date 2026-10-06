@@ -1,14 +1,12 @@
 //  VisitReminderPayload.swift
 //  Shared by: HomeVisit app (schedules reminders) and VisitReminderNotification (displays them)
 //
-//  The visit details packed into a notification's userInfo so the
-//  Notification Content Extension can draw the visit card.
-
+//
 import Foundation
 
 struct VisitReminderPayload {
-    //MARK: - PROPERTIES
-    // Must match UNNotificationExtensionCategory in Config/VisitReminderNotification-Info.plist
+    //PROPERTIES
+   
     static let categoryIdentifier = "VISIT_REMINDER"
 
     let patientName: String
@@ -17,7 +15,7 @@ struct VisitReminderPayload {
     let scheduledStart: Date
     let clinicalAlert: String
 
-    //MARK: - COMPUTED PROPERTIES
+    
     // Dictionary stored on the notification content
     var userInfo: [String: Any] {
         [
@@ -30,7 +28,7 @@ struct VisitReminderPayload {
     }
 }
 
-// MARK: - Reading the payload back in the extension
+// Reading the payload back in the extension
 extension VisitReminderPayload {
     // Returns nil when the notification was not created by HomeVisit
     init?(userInfo: [AnyHashable: Any]) {

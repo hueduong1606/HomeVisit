@@ -1,14 +1,10 @@
 //  RecordVisitOutcomeUseCase.swift
 //  HomeVisit
-//
-//  Business operation: document what happened at the patient's home –
-//  care completed (with a clinical note) or no access (with a reason).
+
 
 import Foundation
 
-// MARK: - RecordVisitOutcomeError
-/// Encountered by: the community nurse documenting a visit at, or just after leaving, the patient's home.
-/// Recovery: the clinical note is never lost – it stays on screen until the outcome is safely saved.
+// RecordVisitOutcomeError
 enum RecordVisitOutcomeError: LocalizedError, Equatable {
     case visitNoLongerOnRound                           // Visit was removed from the round
     case outcomeAlreadyRecorded                         // Clinical record is never overwritten
@@ -30,17 +26,17 @@ enum RecordVisitOutcomeError: LocalizedError, Equatable {
     }
 }
 
-// MARK: - RecordVisitOutcomeUseCase
+//  RecordVisitOutcomeUseCase
 struct RecordVisitOutcomeUseCase {
 
-    //MARK: - PROPERTIES
+    // PROPERTIES
     let repository: CaseloadRepository
     let roundSync: RoundSyncing
 
-    // Business rule: every documented visit needs a meaningful note
+    //  every documented visit needs a meaningful note
     static let minimumNoteLength = 10
 
-    //MARK: - FUNCTION
+    // FUNCTION
     func execute(visitID: UUID, outcome: VisitOutcome, clinicalNote: String) throws(RecordVisitOutcomeError) -> CareVisit {
 
         let foundVisit: CareVisit?

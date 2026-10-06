@@ -1,14 +1,11 @@
 //  VisitDetailView.swift
 //  HomeVisit
 //
-//  Screen 2 – what the nurse needs at the door: who, where, the care needed,
-//  the safety alert, and the visit outcome.
-
 import SwiftUI
 
 struct VisitDetailView: View {
 
-    //MARK: - PROPERTIES
+    // PROPERTIES
     @State var visit: CareVisit
     let dependencies: AppDependencies
     var onVisitChanged: () -> Void
@@ -16,14 +13,14 @@ struct VisitDetailView: View {
     @State private var showRecordOutcomeView = false
     @State private var reminderMessage: String = ""
 
-    //MARK: - INITIALIZER
+    //INITIALIZER
     init(visit: CareVisit, dependencies: AppDependencies, onVisitChanged: @escaping () -> Void = {}) {
         _visit = State(initialValue: visit)
         self.dependencies = dependencies
         self.onVisitChanged = onVisitChanged
     }
 
-    //MARK: - BODY
+    //MBODY
     var body: some View {
         List {
             // Who and why
@@ -94,7 +91,7 @@ struct VisitDetailView: View {
     }
 }
 
-//MARK: - PREVIEW
+//PREVIEW
 struct VisitDetailView_Previews: PreviewProvider {
     static var previews: some View {
         let sampleVisit = CareVisit(

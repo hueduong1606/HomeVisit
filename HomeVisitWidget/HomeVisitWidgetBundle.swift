@@ -1,7 +1,6 @@
 //  HomeVisitWidgetBundle.swift
 //  NextVisitWidget (WidgetKit extension)
 //
-//  Entry point of the widget extension.
 
 import WidgetKit
 import SwiftUI
