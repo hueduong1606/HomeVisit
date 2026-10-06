@@ -1,22 +1,19 @@
 //  VisitReminderScheduler.swift
 //  HomeVisit
-//
-//  Schedules a local notification 15 minutes before each outstanding visit.
-//  Every reminder uses the VISIT_REMINDER category, so the
-//  VisitReminderNotification extension shows it as a visit card.
+
 
 import Foundation
 import UserNotifications
 
 enum VisitReminderScheduler {
 
-    //MARK: - PROPERTIES
-    // Business rule: remind the nurse 15 minutes before the visit so there is time to drive
+    //PROPERTIES
+    // remind the nurse 15 minutes before the visit so there is time to drive
     static let reminderLeadTimeMinutes = 15
 
     static let remindersOffMessage = "Visit reminders are turned off. Turn them on in Settings → Notifications → HomeVisit."
 
-    //MARK: - SETUP
+    //SETUP
 
     // Registers the category that the notification content extension listens for
     static func registerReminderCategory() {
@@ -45,7 +42,7 @@ enum VisitReminderScheduler {
         }
     }
 
-    //MARK: - SCHEDULING
+    //SCHEDULING
 
     // Replaces all pending reminders with one per outstanding visit (only if reminders are allowed)
     static func rescheduleReminders(for visits: [CareVisit]) {
@@ -57,7 +54,7 @@ enum VisitReminderScheduler {
             }
             center.removeAllPendingNotificationRequests()
 
-            // iOS keeps at most 64 pending notifications, so only the earliest 60 visits get one
+            // keeps at most 64 pending notifications, so only the earliest 60 visits get one
             for visit in visits.prefix(60) {
                 let reminderDate = visit.scheduledStart.addingTimeInterval(TimeInterval(-VisitReminderScheduler.reminderLeadTimeMinutes * 60))
                 let secondsUntilReminder = reminderDate.timeIntervalSinceNow
@@ -100,7 +97,7 @@ enum VisitReminderScheduler {
         }
     }
 
-    //MARK: - CONTENT
+    //CONTENT
     static func makeReminderContent(for visit: CareVisit) -> UNMutableNotificationContent {
         let payload = VisitReminderPayload(
             patientName: visit.patientName,

@@ -1,13 +1,13 @@
 //  ScheduleVisitViewModel.swift
 //  HomeVisit
 //
-//  Holds the "Add Visit to Round" form.
+
 
 import Foundation
 
 class ScheduleVisitViewModel: ObservableObject {
 
-    //MARK: - PROPERTIES
+    //PROPERTIES
     @Published var patients: [Patient] = []
     @Published var selectedPatientID: UUID? = nil
     @Published var careType: CareType = .woundCare
@@ -18,13 +18,13 @@ class ScheduleVisitViewModel: ObservableObject {
     private let repository: CaseloadRepository
     private let scheduleHomeVisit: ScheduleHomeVisitUseCase
 
-    //MARK: - INITIALIZER
+    //INITIALIZER
     init(dependencies: AppDependencies = .live) {
         self.repository = dependencies.repository
         self.scheduleHomeVisit = dependencies.makeScheduleHomeVisit()
     }
 
-    //MARK: - COMPUTED PROPERTIES
+    //COMPUTED PROPERTIES
     // The date picker offers times from now until the end of the planning window (today + 14 days)
     var bookingTimes: ClosedRange<Date> {
         let now = Date()

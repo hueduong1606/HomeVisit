@@ -1,13 +1,12 @@
 //  Mocks.swift
 //  HomeVisitTests
 //
-//  In-memory stand-ins for the repository, the widget/reminder sync and the
-//  referral inbox. The tests never touch the real Core Data stack or App Group.
+
 
 import Foundation
 @testable import HomeVisit
 
-// MARK: - MockCaseloadRepository
+//  MockCaseloadRepository
 class MockCaseloadRepository: CaseloadRepository {
     var patients: [Patient] = []
     var visits: [CareVisit] = []
@@ -49,7 +48,7 @@ class MockCaseloadRepository: CaseloadRepository {
     }
 }
 
-// MARK: - MockRoundSync
+//  MockRoundSync
 // Counts how often a Use Case asked for the widget to be refreshed
 class MockRoundSync: RoundSyncing {
     var roundDidChangeCallCount = 0
@@ -59,7 +58,7 @@ class MockRoundSync: RoundSyncing {
     }
 }
 
-// MARK: - MockReferralInbox
+//  MockReferralInbox
 class MockReferralInbox: ReferralInbox {
     var referrals: [PatientReferral] = []
 
@@ -72,7 +71,7 @@ class MockReferralInbox: ReferralInbox {
     }
 }
 
-// MARK: - Test data
+// Test data
 // Fixed times on one day so the tests give the same result whenever they run
 enum TestData {
     static func tuesday(hour: Int, minute: Int = 0) -> Date {

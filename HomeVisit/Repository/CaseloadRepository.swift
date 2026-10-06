@@ -1,21 +1,18 @@
 //  CaseloadRepository.swift
 //  HomeVisit
 //
-//  The ONLY way the rest of the app reaches stored patients and visits.
-//  Use Cases and ViewModels depend on this protocol, never on Core Data,
-//  so unit tests can swap in MockCaseloadRepository.
 
 import Foundation
 
-// MARK: - CaseloadRepository
+//CaseloadRepository
 protocol CaseloadRepository {
 
-    //MARK: - PATIENTS
+    //PATIENTS
     func fetchPatients() throws -> [Patient]
     func findPatient(id: UUID) throws -> Patient?
     func admitPatient(_ patient: Patient) throws
 
-    //MARK: - VISITS
+    // VISITS
     func findVisit(id: UUID) throws -> CareVisit?
     // Every visit on a calendar day (any status), earliest first
     func fetchVisits(scheduledOn day: Date) throws -> [CareVisit]
@@ -27,9 +24,7 @@ protocol CaseloadRepository {
     func saveVisit(_ visit: CareVisit) throws
 }
 
-// MARK: - CaseloadRepositoryError
-/// Never shown to the nurse: every Use Case catches repository errors and turns them
-/// into its own domain error (e.g. ScheduleHomeVisitError.roundCouldNotBeSaved).
+// CaseloadRepositoryError
 enum CaseloadRepositoryError: Error {
     case patientRecordMissing
 }

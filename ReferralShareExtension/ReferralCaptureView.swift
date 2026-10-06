@@ -1,12 +1,9 @@
 //  ReferralCaptureView.swift
 //  ReferralShareExtension
-//
-//  The sheet the nurse sees after choosing HomeVisit in the share sheet.
-//  She types the patient's name, checks the referral text, and saves it.
 
 import SwiftUI
 
-// MARK: - ReferralDraft
+// M ReferralDraft
 // The referral being saved, filled in from the shared text
 class ReferralDraft: ObservableObject {
     @Published var patientName: String = ""
@@ -14,10 +11,10 @@ class ReferralDraft: ObservableObject {
     @Published var errorMessage: String? = nil
 }
 
-// MARK: - ReferralCaptureView
+//  ReferralCaptureView
 struct ReferralCaptureView: View {
 
-    //MARK: - PROPERTIES
+    // PROPERTIES
     @ObservedObject var draft: ReferralDraft
     var onSave: () -> Void
     var onCancel: () -> Void
@@ -52,7 +49,7 @@ struct ReferralCaptureView: View {
     }
 }
 
-//MARK: - PREVIEW
+// PREVIEW
 struct ReferralCaptureView_Previews: PreviewProvider {
     static var previews: some View {
         ReferralCaptureView(draft: ReferralDraft(), onSave: {}, onCancel: {})

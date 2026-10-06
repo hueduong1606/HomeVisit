@@ -1,14 +1,11 @@
 //  PlanTodaysRoundUseCase.swift
 //  HomeVisit
 //
-//  Business operation: show the nurse who is still to be seen today, in time order,
-//  and flag any visit whose outcome is overdue.
 
 import Foundation
 
-// MARK: - PlanTodaysRoundError
-/// Encountered by: the community nurse opening Today's Round before or between home visits.
-/// Recovery: reopen the app, or get today's visit list from the team leader so no patient is missed.
+//  PlanTodaysRoundError
+
 enum PlanTodaysRoundError: LocalizedError, Equatable {
     case roundUnavailable   // Today's visits could not be read from the device
 
@@ -21,17 +18,13 @@ enum PlanTodaysRoundError: LocalizedError, Equatable {
     }
 }
 
-// MARK: - PlanTodaysRoundUseCase
+//PlanTodaysRoundUseCase
 struct PlanTodaysRoundUseCase {
 
-    //MARK: - PROPERTIES
+    //PROPERTIES
     let repository: CaseloadRepository
 
-    //MARK: - FUNCTION
-    /// Business rules:
-    /// 1. visits still to do are listed in time order – the order the nurse drives the round
-    /// 2. a visit still not documented after its planned finish time is flagged "Outcome overdue"
-    /// 3. visits booked for the coming days (planning window) are listed separately, earliest first
+    //FUNCTION
     func execute(on day: Date = Date(), now: Date = Date()) throws(PlanTodaysRoundError) -> TodaysRound {
         let calendar = Calendar.current
         let startOfNextDay = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: day))!

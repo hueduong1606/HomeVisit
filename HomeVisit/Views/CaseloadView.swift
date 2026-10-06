@@ -1,19 +1,18 @@
 //  CaseloadView.swift
 //  HomeVisit
 //
-//  Screen 5 – the nurse's caseload. Referrals shared in through the
-//  Share Extension wait at the top until the patient is admitted.
+
 
 import SwiftUI
 
 struct CaseloadView: View {
 
-    //MARK: - PROPERTIES
+    // PROPERTIES
     @ObservedObject var viewModel: CaseloadViewModel
     @State private var showAdmitPatientView = false
     @State private var selectedReferral: PatientReferral? = nil
 
-    //MARK: - BODY
+    // BODY
     var body: some View {
         NavigationView {
             ZStack(alignment: .top) {
@@ -96,7 +95,7 @@ struct CaseloadView: View {
     }
 }
 
-//MARK: - PREVIEW
+// PREVIEW
 struct CaseloadView_Previews: PreviewProvider {
     static var previews: some View {
         CaseloadView(viewModel: CaseloadViewModel(dependencies: .preview))

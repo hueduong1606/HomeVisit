@@ -1,8 +1,6 @@
 //  HomeVisitUseCaseTests.swift
 //  HomeVisitTests
 //
-//  Six tests across the four Use Cases, using the mock repository only.
-//  Happy paths, boundary conditions and domain error cases.
 
 import Testing
 import Foundation
@@ -11,13 +9,13 @@ import Foundation
 @MainActor
 struct HomeVisitUseCaseTests {
 
-    //MARK: - PROPERTIES
+    // PROPERTIES
     // A fresh mock for every test – no setUp() needed
     let repository = MockCaseloadRepository()
     let roundSync = MockRoundSync()
     let referralInbox = MockReferralInbox()
 
-    //MARK: - SCHEDULE HOME VISIT
+    // SCHEDULE HOME VISIT
 
     // 1. Happy path
     @Test func scheduleHomeVisit_addsVisitToTomorrowsRound_whenPlannedTheDayBefore() throws {
@@ -61,7 +59,7 @@ struct HomeVisitUseCaseTests {
         #expect(repository.visits.count == 1, "The clashing visit must not be saved")
     }
 
-    //MARK: - RECORD VISIT OUTCOME
+    // RECORD VISIT OUTCOME
 
     // 3. Boundary condition
     @Test func recordVisitOutcome_fails_whenClinicalNoteIsNineCharacters_andSucceedsAtTen() throws {
@@ -97,7 +95,7 @@ struct HomeVisitUseCaseTests {
         #expect(repository.visits.first?.status == .noAccess)
     }
 
-    //MARK: - ADMIT PATIENT TO CASELOAD
+    // ADMIT PATIENT TO CASELOAD
 
     // 5. Happy path (referral from the Share Extension)
     @Test func admitPatientToCaseload_clearsReferral_whenAdmittedFromSharedReferral() throws {
@@ -119,7 +117,7 @@ struct HomeVisitUseCaseTests {
         #expect(referralInbox.referrals.isEmpty, "The referral leaves the inbox once the patient is admitted")
     }
 
-    //MARK: - PLAN TODAY'S ROUND
+    //PLAN TODAY'S ROUND
 
     // 6. Boundary condition
     @Test func planTodaysRound_flagsOutcomeOverdue_onlyAfterPlannedFinishTime() throws {

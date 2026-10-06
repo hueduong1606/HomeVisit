@@ -1,14 +1,12 @@
 //  AdmitPatientViewModel.swift
 //  HomeVisit
 //
-//  Holds the "Admit to Caseload" form. When opened from a shared referral,
-//  the patient's name and the referral text are filled in for the nurse.
 
 import Foundation
 
 class AdmitPatientViewModel: ObservableObject {
 
-    //MARK: - PROPERTIES
+    //PROPERTIES
     @Published var fullName: String = ""
     @Published var homeAddress: String = ""
     @Published var clinicalAlert: String = ""
@@ -18,7 +16,7 @@ class AdmitPatientViewModel: ObservableObject {
     let referral: PatientReferral?
     private let admitPatientToCaseload: AdmitPatientToCaseloadUseCase
 
-    //MARK: - INITIALIZER
+    //INITIALIZER
     init(referral: PatientReferral? = nil, dependencies: AppDependencies = .live) {
         self.referral = referral
         self.admitPatientToCaseload = dependencies.makeAdmitPatientToCaseload()
@@ -30,7 +28,7 @@ class AdmitPatientViewModel: ObservableObject {
         }
     }
 
-    //MARK: - FUNCTION
+    //FUNCTION
 
     // Returns true when the patient is on the caseload
     func admitPatient() -> Bool {

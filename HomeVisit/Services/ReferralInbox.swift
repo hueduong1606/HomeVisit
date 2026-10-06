@@ -1,19 +1,15 @@
 //  ReferralInbox.swift
 //  HomeVisit
-//
-//  Referrals shared into HomeVisit by the Share Extension wait here
-//  until the nurse admits the patient to the caseload.
 
 import Foundation
 
-// MARK: - ReferralInbox
+// ReferralInbox
 protocol ReferralInbox {
     func pendingReferrals() throws -> [PatientReferral]
     func removeReferral(id: UUID) throws
 }
 
-// MARK: - AppGroupReferralInbox
-/// Reads the JSON file the Share Extension writes into the App Group container.
+// AppGroupReferralInbox
 struct AppGroupReferralInbox: ReferralInbox {
 
     func pendingReferrals() throws -> [PatientReferral] {
@@ -25,7 +21,7 @@ struct AppGroupReferralInbox: ReferralInbox {
     }
 }
 
-// MARK: - PreviewReferralInbox
+// PreviewReferralInbox
 /// One sample referral for SwiftUI previews.
 struct PreviewReferralInbox: ReferralInbox {
 

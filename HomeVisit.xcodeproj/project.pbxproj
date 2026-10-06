@@ -7,25 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		29EB282A5490D7D43207AB5B /* VisitReminderNotification.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9E5A9907B85C04F3990BC9A2 /* VisitReminderNotification.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A07851D5C5F48153A9E34BA7 /* NextVisitWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 7FCB50FA5BA7B7974951194A /* NextVisitWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AF739EFDA60CA8ED52F30FFA /* ReferralShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = EA015F39CCECCA677F39A97A /* ReferralShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		29EB282A5490D7D43207AB5B /* VisitReminderNotification.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9E5A9907B85C04F3990BC9A2 /* VisitReminderNotification.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1A1A8483E798E89F5E37C756 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 76CAAA9EFE57A046A558BF3F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 19221EE70FCDFCA7E8F20822;
+			remoteInfo = HomeVisit;
+		};
 		58A69DECCCA216261EF5F435 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 76CAAA9EFE57A046A558BF3F /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 197EFBDFB65DDE0B6BB10F9D;
 			remoteInfo = NextVisitWidgetExtension;
-		};
-		E46506AD079ADD8A9B96EA5B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 76CAAA9EFE57A046A558BF3F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C39CF7F14C9F3733A316986F;
-			remoteInfo = ReferralShareExtension;
 		};
 		9C76EB500FF1896207AD5CA4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -34,12 +34,12 @@
 			remoteGlobalIDString = FD506FF67C96187D6283D55E;
 			remoteInfo = VisitReminderNotification;
 		};
-		1A1A8483E798E89F5E37C756 /* PBXContainerItemProxy */ = {
+		E46506AD079ADD8A9B96EA5B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 76CAAA9EFE57A046A558BF3F /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 19221EE70FCDFCA7E8F20822;
-			remoteInfo = HomeVisit;
+			remoteGlobalIDString = C39CF7F14C9F3733A316986F;
+			remoteInfo = ReferralShareExtension;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -60,26 +60,21 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		29F206242F56E6D1AE428BC7 /* HomeVisit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HomeVisit.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		7FCB50FA5BA7B7974951194A /* NextVisitWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NextVisitWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		EA015F39CCECCA677F39A97A /* ReferralShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ReferralShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		9E5A9907B85C04F3990BC9A2 /* VisitReminderNotification.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = VisitReminderNotification.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		00CD25A01DB32BCFDDA2D558 /* HomeVisitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HomeVisitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		29F206242F56E6D1AE428BC7 /* HomeVisit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HomeVisit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E5B6ECD24D4F24934CCF404 /* HomeVisit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HomeVisit.entitlements; sourceTree = "<group>"; };
-		AE73CCA3E8006C6F737BECD3 /* NextVisitWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NextVisitWidget.entitlements; sourceTree = "<group>"; };
-		CE5B01295E1558B27C018FA6 /* ReferralShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ReferralShareExtension.entitlements; sourceTree = "<group>"; };
 		326F15C9153AAB7050F47084 /* NextVisitWidget-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NextVisitWidget-Info.plist"; sourceTree = "<group>"; };
-		BED144EAAA41DB436E55860B /* ReferralShareExtension-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ReferralShareExtension-Info.plist"; sourceTree = "<group>"; };
 		708E421CF60D2A1BFA056F19 /* VisitReminderNotification-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "VisitReminderNotification-Info.plist"; sourceTree = "<group>"; };
+		7FCB50FA5BA7B7974951194A /* NextVisitWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NextVisitWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E5A9907B85C04F3990BC9A2 /* VisitReminderNotification.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = VisitReminderNotification.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A82F91BE191CE98FF94F531E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		AE73CCA3E8006C6F737BECD3 /* NextVisitWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NextVisitWidget.entitlements; sourceTree = "<group>"; };
+		BED144EAAA41DB436E55860B /* ReferralShareExtension-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ReferralShareExtension-Info.plist"; sourceTree = "<group>"; };
+		CE5B01295E1558B27C018FA6 /* ReferralShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ReferralShareExtension.entitlements; sourceTree = "<group>"; };
+		EA015F39CCECCA677F39A97A /* ReferralShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ReferralShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		B0DA0EC139A4E8935EA36A24 /* HomeVisit */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = HomeVisit;
-			sourceTree = "<group>";
-		};
 		2519B8D33CE0A7123B5D75C8 /* Shared */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Shared;
@@ -90,14 +85,19 @@
 			path = HomeVisitWidget;
 			sourceTree = "<group>";
 		};
-		EEFA926BE8A996C4D479AA6C /* ReferralShareExtension */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ReferralShareExtension;
-			sourceTree = "<group>";
-		};
 		91D602D5273B331DEC8F03EA /* VisitReminderNotification */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = VisitReminderNotification;
+			sourceTree = "<group>";
+		};
+		B0DA0EC139A4E8935EA36A24 /* HomeVisit */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = HomeVisit;
+			sourceTree = "<group>";
+		};
+		EEFA926BE8A996C4D479AA6C /* ReferralShareExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ReferralShareExtension;
 			sourceTree = "<group>";
 		};
 		F3903A1E979490BDD796010C /* HomeVisitTests */ = {
@@ -108,7 +108,7 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		E5AB4CF7E16ACF5C0985B07B /* Frameworks */ = {
+		462A7900FF2D60261824E6A0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,13 +122,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		EEF0A01E1BA7EB75AF65714A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		686A3AB63BE11C7D7D144E86 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -136,7 +129,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		462A7900FF2D60261824E6A0 /* Frameworks */ = {
+		E5AB4CF7E16ACF5C0985B07B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EEF0A01E1BA7EB75AF65714A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -146,6 +146,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		35CD62A78C8A5DF5BA7EED53 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				2E5B6ECD24D4F24934CCF404 /* HomeVisit.entitlements */,
+				AE73CCA3E8006C6F737BECD3 /* NextVisitWidget.entitlements */,
+				CE5B01295E1558B27C018FA6 /* ReferralShareExtension.entitlements */,
+				326F15C9153AAB7050F47084 /* NextVisitWidget-Info.plist */,
+				BED144EAAA41DB436E55860B /* ReferralShareExtension-Info.plist */,
+				708E421CF60D2A1BFA056F19 /* VisitReminderNotification-Info.plist */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
 		3F7ED50C2FB7B97BC5E69E5F = {
 			isa = PBXGroup;
 			children = (
@@ -159,19 +172,6 @@
 				35CD62A78C8A5DF5BA7EED53 /* Config */,
 				B63C2738645BABD2C46AA546 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		35CD62A78C8A5DF5BA7EED53 /* Config */ = {
-			isa = PBXGroup;
-			children = (
-				2E5B6ECD24D4F24934CCF404 /* HomeVisit.entitlements */,
-				AE73CCA3E8006C6F737BECD3 /* NextVisitWidget.entitlements */,
-				CE5B01295E1558B27C018FA6 /* ReferralShareExtension.entitlements */,
-				326F15C9153AAB7050F47084 /* NextVisitWidget-Info.plist */,
-				BED144EAAA41DB436E55860B /* ReferralShareExtension-Info.plist */,
-				708E421CF60D2A1BFA056F19 /* VisitReminderNotification-Info.plist */,
-			);
-			path = Config;
 			sourceTree = "<group>";
 		};
 		B63C2738645BABD2C46AA546 /* Products */ = {
@@ -206,8 +206,8 @@
 				8845989B1A345BE111F33F67 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				B0DA0EC139A4E8935EA36A24 /* HomeVisit */,
 				2519B8D33CE0A7123B5D75C8 /* Shared */,
+				B0DA0EC139A4E8935EA36A24 /* HomeVisit */,
 			);
 			name = HomeVisit;
 			packageProductDependencies = (
@@ -229,60 +229,14 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				41AC02D356891AD2EC2C92D6 /* HomeVisitWidget */,
 				2519B8D33CE0A7123B5D75C8 /* Shared */,
+				41AC02D356891AD2EC2C92D6 /* HomeVisitWidget */,
 			);
 			name = NextVisitWidgetExtension;
 			packageProductDependencies = (
 			);
 			productName = NextVisitWidgetExtension;
 			productReference = 7FCB50FA5BA7B7974951194A /* NextVisitWidgetExtension.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
-		C39CF7F14C9F3733A316986F /* ReferralShareExtension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 57964D5E7391A404E94EB506 /* Build configuration list for PBXNativeTarget "ReferralShareExtension" */;
-			buildPhases = (
-				9CC77EFCFA93014E703512E9 /* Sources */,
-				EEF0A01E1BA7EB75AF65714A /* Frameworks */,
-				595F3D803187D53C7381F065 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				EEFA926BE8A996C4D479AA6C /* ReferralShareExtension */,
-				2519B8D33CE0A7123B5D75C8 /* Shared */,
-			);
-			name = ReferralShareExtension;
-			packageProductDependencies = (
-			);
-			productName = ReferralShareExtension;
-			productReference = EA015F39CCECCA677F39A97A /* ReferralShareExtension.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
-		FD506FF67C96187D6283D55E /* VisitReminderNotification */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 310262D57A315B290F7B22F9 /* Build configuration list for PBXNativeTarget "VisitReminderNotification" */;
-			buildPhases = (
-				312176DAD37ECED840C6BFAA /* Sources */,
-				686A3AB63BE11C7D7D144E86 /* Frameworks */,
-				3251C1DE436D16831C7EF9D5 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				91D602D5273B331DEC8F03EA /* VisitReminderNotification */,
-				2519B8D33CE0A7123B5D75C8 /* Shared */,
-			);
-			name = VisitReminderNotification;
-			packageProductDependencies = (
-			);
-			productName = VisitReminderNotification;
-			productReference = 9E5A9907B85C04F3990BC9A2 /* VisitReminderNotification.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 		C1E383DAA98FFFB03FB14384 /* HomeVisitTests */ = {
@@ -308,6 +262,52 @@
 			productReference = 00CD25A01DB32BCFDDA2D558 /* HomeVisitTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		C39CF7F14C9F3733A316986F /* ReferralShareExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 57964D5E7391A404E94EB506 /* Build configuration list for PBXNativeTarget "ReferralShareExtension" */;
+			buildPhases = (
+				9CC77EFCFA93014E703512E9 /* Sources */,
+				EEF0A01E1BA7EB75AF65714A /* Frameworks */,
+				595F3D803187D53C7381F065 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2519B8D33CE0A7123B5D75C8 /* Shared */,
+				EEFA926BE8A996C4D479AA6C /* ReferralShareExtension */,
+			);
+			name = ReferralShareExtension;
+			packageProductDependencies = (
+			);
+			productName = ReferralShareExtension;
+			productReference = EA015F39CCECCA677F39A97A /* ReferralShareExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		FD506FF67C96187D6283D55E /* VisitReminderNotification */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 310262D57A315B290F7B22F9 /* Build configuration list for PBXNativeTarget "VisitReminderNotification" */;
+			buildPhases = (
+				312176DAD37ECED840C6BFAA /* Sources */,
+				686A3AB63BE11C7D7D144E86 /* Frameworks */,
+				3251C1DE436D16831C7EF9D5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2519B8D33CE0A7123B5D75C8 /* Shared */,
+				91D602D5273B331DEC8F03EA /* VisitReminderNotification */,
+			);
+			name = VisitReminderNotification;
+			packageProductDependencies = (
+			);
+			productName = VisitReminderNotification;
+			productReference = 9E5A9907B85C04F3990BC9A2 /* VisitReminderNotification.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -324,15 +324,15 @@
 					197EFBDFB65DDE0B6BB10F9D = {
 						CreatedOnToolsVersion = 16.0;
 					};
+					C1E383DAA98FFFB03FB14384 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 19221EE70FCDFCA7E8F20822;
+					};
 					C39CF7F14C9F3733A316986F = {
 						CreatedOnToolsVersion = 16.0;
 					};
 					FD506FF67C96187D6283D55E = {
 						CreatedOnToolsVersion = 16.0;
-					};
-					C1E383DAA98FFFB03FB14384 = {
-						CreatedOnToolsVersion = 16.0;
-						TestTargetID = 19221EE70FCDFCA7E8F20822;
 					};
 				};
 			};
@@ -360,6 +360,27 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		08D45899DABED034A72D7557 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3251C1DE436D16831C7EF9D5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		595F3D803187D53C7381F065 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E3B23F564841B9A77A1828F9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -374,30 +395,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		595F3D803187D53C7381F065 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3251C1DE436D16831C7EF9D5 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		08D45899DABED034A72D7557 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		307B05A23F883A79C6B9756B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		312176DAD37ECED840C6BFAA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9CC77EFCFA93014E703512E9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BA5FE389BD367172FAFD1C76 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -412,27 +433,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		9CC77EFCFA93014E703512E9 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		312176DAD37ECED840C6BFAA /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		307B05A23F883A79C6B9756B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -441,15 +441,15 @@
 			target = 197EFBDFB65DDE0B6BB10F9D /* NextVisitWidgetExtension */;
 			targetProxy = 58A69DECCCA216261EF5F435 /* PBXContainerItemProxy */;
 		};
-		8D459CD4EB55AA5125AC19B8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C39CF7F14C9F3733A316986F /* ReferralShareExtension */;
-			targetProxy = E46506AD079ADD8A9B96EA5B /* PBXContainerItemProxy */;
-		};
 		8845989B1A345BE111F33F67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = FD506FF67C96187D6283D55E /* VisitReminderNotification */;
 			targetProxy = 9C76EB500FF1896207AD5CA4 /* PBXContainerItemProxy */;
+		};
+		8D459CD4EB55AA5125AC19B8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C39CF7F14C9F3733A316986F /* ReferralShareExtension */;
+			targetProxy = E46506AD079ADD8A9B96EA5B /* PBXContainerItemProxy */;
 		};
 		E133AB7FC1EC7F22478FAC92 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -459,6 +459,294 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		0328F5C2AEA9FC344E34828B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Config/ReferralShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/ReferralShareExtension-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = HomeVisit;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisit.ReferralShare;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		1FEB24BF262FF169F4961C83 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HomeVisit.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HomeVisit";
+			};
+			name = Debug;
+		};
+		4914A20FAB12A4E2928D1E76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Config/ReferralShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/ReferralShareExtension-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = HomeVisit;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisit.ReferralShare;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		5E7C35C5867C95D32B1519DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		66884E3A63A8D5CBDB5A6FB6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Config/NextVisitWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/NextVisitWidget-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Next Home Visit";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisit.NextVisitWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		7063BF0F9AAAFA439F175EB9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Config/HomeVisit.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = HomeVisit;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		853B7D6A5B55EF5DCF3BAB15 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Config/HomeVisit.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = HomeVisit;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		8C7D984F7C0B480F95DC026A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/VisitReminderNotification-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Visit Reminder";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisit.VisitReminder;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		C87EA8F4231A876EC3B1650A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/VisitReminderNotification-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Visit Reminder";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisit.VisitReminder;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		CAA2C0CB0C706C29A00DB751 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Config/NextVisitWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/NextVisitWidget-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Next Home Visit";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisit.NextVisitWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 		F1B89A5E44D2B3A83E630F87 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -522,294 +810,6 @@
 			};
 			name = Debug;
 		};
-		5E7C35C5867C95D32B1519DA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		7063BF0F9AAAFA439F175EB9 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Config/HomeVisit.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = HomeVisit;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisit;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Debug;
-		};
-		853B7D6A5B55EF5DCF3BAB15 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Config/HomeVisit.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = HomeVisit;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisit;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
-		66884E3A63A8D5CBDB5A6FB6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Config/NextVisitWidget.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Config/NextVisitWidget-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Next Home Visit";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisit.NextVisitWidget;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Debug;
-		};
-		CAA2C0CB0C706C29A00DB751 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Config/NextVisitWidget.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Config/NextVisitWidget-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Next Home Visit";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisit.NextVisitWidget;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
-		0328F5C2AEA9FC344E34828B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Config/ReferralShareExtension.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Config/ReferralShareExtension-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = HomeVisit;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisit.ReferralShare;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Debug;
-		};
-		4914A20FAB12A4E2928D1E76 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Config/ReferralShareExtension.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Config/ReferralShareExtension-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = HomeVisit;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisit.ReferralShare;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
-		8C7D984F7C0B480F95DC026A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Config/VisitReminderNotification-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Visit Reminder";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisit.VisitReminder;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Debug;
-		};
-		C87EA8F4231A876EC3B1650A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Config/VisitReminderNotification-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Visit Reminder";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisit.VisitReminder;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
-		1FEB24BF262FF169F4961C83 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.heather.HomeVisitTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HomeVisit.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HomeVisit";
-			};
-			name = Debug;
-		};
 		F675D4459A4A440D67A9D964 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -831,11 +831,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E133FD2F30EB7D4E1456AE87 /* Build configuration list for PBXProject "HomeVisit" */ = {
+		1BACE66CC7ED567967522FCB /* Build configuration list for PBXNativeTarget "HomeVisitTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				F1B89A5E44D2B3A83E630F87 /* Debug */,
-				5E7C35C5867C95D32B1519DA /* Release */,
+				1FEB24BF262FF169F4961C83 /* Debug */,
+				F675D4459A4A440D67A9D964 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -849,11 +849,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F2C21BC0615BE7F36487938F /* Build configuration list for PBXNativeTarget "NextVisitWidgetExtension" */ = {
+		310262D57A315B290F7B22F9 /* Build configuration list for PBXNativeTarget "VisitReminderNotification" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				66884E3A63A8D5CBDB5A6FB6 /* Debug */,
-				CAA2C0CB0C706C29A00DB751 /* Release */,
+				8C7D984F7C0B480F95DC026A /* Debug */,
+				C87EA8F4231A876EC3B1650A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -867,20 +867,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		310262D57A315B290F7B22F9 /* Build configuration list for PBXNativeTarget "VisitReminderNotification" */ = {
+		E133FD2F30EB7D4E1456AE87 /* Build configuration list for PBXProject "HomeVisit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8C7D984F7C0B480F95DC026A /* Debug */,
-				C87EA8F4231A876EC3B1650A /* Release */,
+				F1B89A5E44D2B3A83E630F87 /* Debug */,
+				5E7C35C5867C95D32B1519DA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1BACE66CC7ED567967522FCB /* Build configuration list for PBXNativeTarget "HomeVisitTests" */ = {
+		F2C21BC0615BE7F36487938F /* Build configuration list for PBXNativeTarget "NextVisitWidgetExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1FEB24BF262FF169F4961C83 /* Debug */,
-				F675D4459A4A440D67A9D964 /* Release */,
+				66884E3A63A8D5CBDB5A6FB6 /* Debug */,
+				CAA2C0CB0C706C29A00DB751 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

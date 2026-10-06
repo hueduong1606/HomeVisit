@@ -1,15 +1,11 @@
 //  AdmitPatientToCaseloadUseCase.swift
 //  HomeVisit
 //
-//  Business operation: accept a patient onto the nurse's caseload,
-//  typed in by hand or from a referral shared into HomeVisit.
 
 import Foundation
 
-// MARK: - AdmitPatientError
-/// Encountered by: the community nurse on "Admit Patient", typing a new patient in
-/// or admitting one from a referral shared by a GP or hospital.
-/// Recovery: each message points back to the referral, the referrer, or Today's Round.
+//AdmitPatientError
+
 enum AdmitPatientError: LocalizedError, Equatable {
     case patientNameMissing                         // Nurse would not know who she is visiting
     case homeAddressIncomplete                      // Nurse could not find the home (no street number)
@@ -34,14 +30,14 @@ enum AdmitPatientError: LocalizedError, Equatable {
     }
 }
 
-// MARK: - AdmitPatientToCaseloadUseCase
+// AdmitPatientToCaseloadUseCase
 struct AdmitPatientToCaseloadUseCase {
 
-    //MARK: - PROPERTIES
+    // PROPERTIES
     let repository: CaseloadRepository
     let referralInbox: ReferralInbox
 
-    //MARK: - FUNCTION
+    //FUNCTION
     func execute(
         fullName: String,
         homeAddress: String,

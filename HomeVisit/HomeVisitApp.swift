@@ -1,8 +1,6 @@
 //  HomeVisitApp.swift
 //  HomeVisit
 //
-//  App entry point. Registers the visit reminder category used by the
-//  VisitReminderNotification content extension.
 
 import SwiftUI
 import UserNotifications
@@ -10,7 +8,7 @@ import UserNotifications
 @main
 struct HomeVisitApp: App {
 
-    //MARK: - INITIALIZER
+    //INITIALIZER
     init() {
         // The category routes reminders to the notification content extension
         VisitReminderScheduler.registerReminderCategory()
@@ -18,7 +16,7 @@ struct HomeVisitApp: App {
         UNUserNotificationCenter.current().delegate = ReminderPresentationDelegate.shared
     }
 
-    //MARK: - BODY
+    // BODY
     var body: some Scene {
         WindowGroup {
             ContentView()

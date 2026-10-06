@@ -1,15 +1,13 @@
 //  Persistence.swift
 //  HomeVisit
 //
-//  Sets up the Core Data stack. The SQLite store lives in the App Group container.
 
-import CoreData // Import the CoreData framework
+import CoreData
 
-// Struct to manage persistent data storage
 struct PersistenceController {
 
-    //MARK: - PROPERTIES
-    // Singleton instance to allow global access to this controller
+    //PROPERTIES
+   
     static let shared = PersistenceController()
 
     // Preview instance using in-memory storage (for SwiftUI previews)
@@ -44,7 +42,7 @@ struct PersistenceController {
 
     let container: NSPersistentContainer // Main persistent container
 
-    //MARK: - INITIALIZER
+    //INITIALIZER
     init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "HomeVisit") // Initialize container with the model name
         if inMemory {

@@ -1,14 +1,11 @@
 //  ScheduleHomeVisitUseCase.swift
 //  HomeVisit
-//
-//  Business operation: add a home visit for a patient to the nurse's round.
+
 
 import Foundation
 
-// MARK: - ScheduleHomeVisitError
-/// Encountered by: the community nurse on "Add Visit to Round", booking a visit for today
-/// or planning ahead (e.g. tomorrow's round the day before).
-/// Recovery: every message names the rule that was broken and the change that will let the booking through.
+// ScheduleHomeVisitError
+
 enum ScheduleHomeVisitError: LocalizedError, Equatable {
     case patientNotOnCaseload                       // Patient was never admitted (or no longer exists)
     case visitTimeInThePast                         // Start time has already gone
@@ -39,19 +36,19 @@ enum ScheduleHomeVisitError: LocalizedError, Equatable {
     }
 }
 
-// MARK: - ScheduleHomeVisitUseCase
+// ScheduleHomeVisitUseCase
 struct ScheduleHomeVisitUseCase {
 
-    //MARK: - PROPERTIES
+    // PROPERTIES
     let repository: CaseloadRepository
     let roundSync: RoundSyncing
 
-    // Business rule: shortest and longest visit a nurse can safely book
+    // shortest and longest visit a nurse can safely book
     static let safeDurationRange = 15...180
-    // Business rule: rounds can be planned today and up to 14 days ahead (e.g. tomorrow's round the day before)
+    // rounds can be planned today and up to 14 days ahead (e.g. tomorrow's round the day before)
     static let planningWindowDays = 14
 
-    //MARK: - FUNCTION
+    //FUNCTION
     func execute(
         patientID: UUID,
         careType: CareType,

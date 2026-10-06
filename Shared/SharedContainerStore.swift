@@ -1,18 +1,12 @@
 //  SharedContainerStore.swift
 //  Shared by: HomeVisit app, NextVisitWidget, ReferralShareExtension
 //
-//  Reads and writes the JSON files in the App Group container.
-//  Each extension runs in its own process, so these files are how they talk to the app.
-//  - Files are replaced atomically, so a reader never sees a half-written file.
-//  - The referral inbox is read and changed inside an NSFileCoordinator block, so the
-//    share extension and the app never overwrite each other's changes.
-//  - A file that cannot be read throws an error; it is never treated as an empty inbox.
 
 import Foundation
 
 enum SharedContainerStore {
 
-    //MARK: - TODAY'S ROUND (app -> widget)
+    //TODAY'S ROUND (app -> widget)
 
     // Called by the app after every successful change to the round
     static func saveRoundSnapshot(_ snapshot: RoundSnapshot) throws {
@@ -29,7 +23,7 @@ enum SharedContainerStore {
         return try? JSONDecoder().decode(RoundSnapshot.self, from: data)
     }
 
-    //MARK: - REFERRAL INBOX (share extension -> app)
+    //REFERRAL INBOX (share extension -> app)
 
     // Oldest referral first. Throws ReferralSharingError if the inbox exists but cannot be read.
     static func loadReferrals() throws -> [PatientReferral] {
@@ -66,7 +60,7 @@ enum SharedContainerStore {
         }
     }
 
-    //MARK: - PRIVATE
+    //PRIVATE
 
     // Read -> change -> write the inbox as one coordinated step
     private static func updateReferrals(_ change: ([PatientReferral]) -> [PatientReferral]) throws {

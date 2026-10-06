@@ -1,17 +1,15 @@
 //  VisitReminderCardView.swift
 //  VisitReminderNotification (Notification Content Extension)
 //
-//  The custom card shown when the nurse presses and holds a visit reminder:
-//  time, patient, care type, address and – most importantly – the safety alert.
 
 import SwiftUI
 
 struct VisitReminderCardView: View {
 
-    //MARK: - PROPERTIES
+    //PROPERTIES
     let payload: VisitReminderPayload
 
-    //MARK: - BODY
+    // BODY
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Next home visit")
@@ -43,7 +41,7 @@ struct VisitReminderCardView: View {
     }
 }
 
-//MARK: - PREVIEW
+//PREVIEW
 struct VisitReminderCardView_Previews: PreviewProvider {
     static var previews: some View {
         VisitReminderCardView(payload: VisitReminderPayload(
