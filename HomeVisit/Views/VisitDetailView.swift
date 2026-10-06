@@ -1,8 +1,8 @@
 //  VisitDetailView.swift
 //  HomeVisit
 //
-//  Screen 2 – everything the nurse needs at the door: who, where, why,
-//  safety alerts, a one-tap route and call, and the visit outcome.
+//  Screen 2 – what the nurse needs at the door: who, where, the care needed,
+//  the safety alert, and the visit outcome.
 
 import SwiftUI
 
@@ -13,8 +13,8 @@ struct VisitDetailView: View {
     let dependencies: AppDependencies
     var onVisitChanged: () -> Void
 
-    @State private var isShowingRecordOutcome = false
-    @State private var reminderConfirmation: String? = nil
+    @State private var showRecordOutcomeView = false
+    @State private var reminderMessage: String = ""
 
     //MARK: - INITIALIZER
     init(visit: CareVisit, dependencies: AppDependencies, onVisitChanged: @escaping () -> Void = {}) {
@@ -23,42 +23,20 @@ struct VisitDetailView: View {
         self.onVisitChanged = onVisitChanged
     }
 
-    //MARK: - COMPUTED PROPERTIES
-    // Apple Maps driving directions to the patient's home
-    var directionsURL: URL? {
-        guard let encodedAddress = visit.homeAddress.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
-            return nil
-        }
-        return URL(string: "https://maps.apple.com/?daddr=\(encodedAddress)&dirflg=d")
-    }
-
-    var callURL: URL? {
-        guard !visit.dialableContactNumber.isEmpty else { return nil }
-        return URL(string: "tel:\(visit.dialableContactNumber)")
-    }
-
     //MARK: - BODY
     var body: some View {
         List {
-
             // Who and why
             Section {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(visit.patientName)
                         .font(.title2)
-                        .fontWeight(.bold)
+                        .bold()
                     Label(visit.careType.rawValue, systemImage: visit.careType.symbolName)
                         .foregroundColor(.accentColor)
-                    HStack {
-                        Text(visit.scheduledStart, style: .date)
-                        Text("at")
-                        Text(visit.scheduledStart, style: .time)
-                        Text("· \(visit.durationMinutes) min")
-                    }
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                } //: VStack
-                .padding(.vertical, 4)
+                    Text("\(visit.scheduledStart.formatted(date: .abbreviated, time: .shortened)) · \(visit.durationMinutes) min")
+                        .foregroundColor(.secondary)
+                }
             }
 
             // Safety first – shown above the address on purpose
@@ -66,78 +44,49 @@ struct VisitDetailView: View {
                 Section(header: Text("Clinical alert")) {
                     Label(visit.clinicalAlert, systemImage: "exclamationmark.triangle.fill")
                         .foregroundColor(.orange)
-                        .font(.headline)
                 }
             }
 
-            // Getting there
-            Section(header: Text("Getting there")) {
+            // Where to go
+            Section(header: Text("Home address")) {
                 Label(visit.homeAddress, systemImage: "house.fill")
-                if let directionsURL = directionsURL {
-                    Link(destination: directionsURL) {
-                        Label("Directions in Maps", systemImage: "car.fill")
-                    }
-                }
-                if let callURL = callURL {
-                    Link(destination: callURL) {
-                        Label("Call patient (\(visit.contactNumber))", systemImage: "phone.fill")
-                    }
-                }
             }
 
-            // Outcome
+            // Visit outcome
             Section(header: Text("Visit outcome")) {
                 if visit.status.isClosed {
-                    Label(visit.status.rawValue, systemImage: visit.status.symbolName)
+                    Text(visit.status.rawValue)
                         .font(.headline)
-                        .foregroundColor(visit.status == .completed ? Color.green : Color.orange)
+                        .foregroundColor(.green)
                     Text(visit.outcomeNote)
-                    if let recordedAt = visit.outcomeRecordedAt {
-                        Text("Documented \(recordedAt.formatted(date: .abbreviated, time: .shortened))")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
                 } else {
-                    Button {
-                        isShowingRecordOutcome = true
-                    } label: {
-                        Label("Record Visit Outcome", systemImage: "square.and.pencil")
-                            .font(.headline)
+                    Button("Record Visit Outcome") {
+                        showRecordOutcomeView = true
                     }
                 }
             }
 
-            // Visit reminder (lets the nurse – or a marker – see the rich notification now)
+            // Visit reminder – lets the nurse see the reminder card straight away
             if !visit.status.isClosed {
-                Section(
-                    header: Text("Visit reminder"),
-                    footer: Text("Reminders arrive \(VisitReminderScheduler.reminderLeadTimeMinutes) minutes before each visit. Press and hold the reminder to see the full visit card.")
-                ) {
-                    Button {
+                Section(header: Text("Visit reminder")) {
+                    Button("Preview Visit Reminder") {
                         VisitReminderScheduler.sendPreviewReminder(for: visit)
-                        reminderConfirmation = "Reminder arriving in 5 seconds – lock the screen or go Home to see it."
-                    } label: {
-                        Label("Preview Visit Reminder", systemImage: "bell.badge")
+                        reminderMessage = "Reminder arriving in 5 seconds. Lock the screen or go to the Home Screen to see it."
                     }
-                    if let reminderConfirmation = reminderConfirmation {
-                        Text(reminderConfirmation)
+                    if !reminderMessage.isEmpty {
+                        Text(reminderMessage)
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
                 }
             }
         } //: List
-        .listStyle(.insetGrouped)
         .navigationTitle("Home Visit")
-        .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $isShowingRecordOutcome) {
-            RecordOutcomeView(
-                viewModel: RecordOutcomeViewModel(visit: visit, dependencies: dependencies),
-                onOutcomeSaved: { documentedVisit in
-                    visit = documentedVisit   // Show the outcome on this screen
-                    onVisitChanged()          // Refresh Today's Round behind it
-                }
-            )
+        .sheet(isPresented: $showRecordOutcomeView) {
+            RecordOutcomeView(viewModel: RecordOutcomeViewModel(visit: visit, dependencies: dependencies)) { documentedVisit in
+                visit = documentedVisit   // Show the outcome on this screen
+                onVisitChanged()          // Refresh Today's Round behind it
+            }
         }
     }
 }
@@ -147,13 +96,12 @@ struct VisitDetailView_Previews: PreviewProvider {
     static var previews: some View {
         let sampleVisit = CareVisit(
             patientID: UUID(),
-            patientName: "Dorothy Williams",
-            homeAddress: "88 Church Street, Westmead NSW 2145",
-            contactNumber: "0400 111 222",
-            clinicalAlert: "Falls risk – uses walking frame",
-            careType: .postDischargeCheck,
+            patientName: "Margaret Thompson",
+            homeAddress: "14 Wattle Street, Parramatta NSW 2150",
+            clinicalAlert: "Dog on premises – call ahead",
+            careType: .woundCare,
             scheduledStart: Date(),
-            durationMinutes: 60
+            durationMinutes: 45
         )
         NavigationView {
             VisitDetailView(visit: sampleVisit, dependencies: .preview)

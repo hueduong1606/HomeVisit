@@ -1,27 +1,23 @@
 //  ContentView.swift
 //  HomeVisit
 //
-//  Three tabs that follow the nurse's working day:
-//  Today's Round (drive and document) -> Caseload (plan) -> Referrals (new patients).
+//  Two tabs that follow the nurse's working day:
+//  Today's Round (drive and document) and Caseload (referrals and patients).
 
 import SwiftUI
 
 struct ContentView: View {
 
     //MARK: - PROPERTIES
+    @StateObject var roundViewModel: TodaysRoundViewModel
+    @StateObject var caseloadViewModel: CaseloadViewModel
     let dependencies: AppDependencies
-
-    @Environment(\.scenePhase) private var scenePhase
-    @StateObject private var roundViewModel: TodaysRoundViewModel
-    @StateObject private var caseloadViewModel: CaseloadViewModel
-    @StateObject private var referralInboxViewModel: ReferralInboxViewModel
 
     //MARK: - INITIALIZER
     init(dependencies: AppDependencies = .live) {
         self.dependencies = dependencies
         _roundViewModel = StateObject(wrappedValue: TodaysRoundViewModel(dependencies: dependencies))
         _caseloadViewModel = StateObject(wrappedValue: CaseloadViewModel(dependencies: dependencies))
-        _referralInboxViewModel = StateObject(wrappedValue: ReferralInboxViewModel(dependencies: dependencies))
     }
 
     //MARK: - BODY
@@ -38,32 +34,10 @@ struct ContentView: View {
                     Image(systemName: "person.2.fill")
                     Text("Caseload")
                 }
-
-            ReferralInboxView(viewModel: referralInboxViewModel, onPatientAdmitted: {
-                caseloadViewModel.loadCaseload()
-            })
-                .tabItem {
-                    Image(systemName: "tray.and.arrow.down.fill")
-                    Text("Referrals")
-                }
-                .badge(referralInboxViewModel.referrals.count)
         } //: TabView
-        .task {
-            // Ask once for permission to send visit reminders, then schedule them
-            VisitReminderScheduler.requestPermission { granted in
-                if granted {
-                    dependencies.roundSync.roundDidChange()
-                }
-            }
-            referralInboxViewModel.loadReferrals()
-        }
-        .onChange(of: scenePhase) { _, newPhase in
-            // Coming back to the app: pick up new referrals and refresh the widget for today
-            if newPhase == .active {
-                dependencies.roundSync.roundDidChange()
-                roundViewModel.loadRound()
-                referralInboxViewModel.loadReferrals()
-            }
+        .onAppear {
+            VisitReminderScheduler.requestPermission()  // Ask once for permission to send visit reminders
+            dependencies.roundSync.roundDidChange()      // Give the widget today's round as soon as the app opens
         }
     }
 }

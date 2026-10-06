@@ -12,24 +12,12 @@ struct VisitCardView: View {
     let visit: CareVisit
     var isRunningLate: Bool = false
 
-    // Green = completed, orange = no access, grey = still to visit
-    var statusColor: Color {
-        switch visit.status {
-        case .completed:
-            return Color.green
-        case .noAccess:
-            return Color.orange
-        case .scheduled:
-            return Color.secondary
-        }
-    }
-
     //MARK: - BODY
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
 
             // Time column
-            VStack(alignment: .center, spacing: 2) {
+            VStack {
                 Text(visit.scheduledStart, style: .time)
                     .font(.headline)
                 Text("\(visit.durationMinutes) min")
@@ -43,7 +31,7 @@ struct VisitCardView: View {
                 Text(visit.patientName)
                     .font(.headline)
 
-                Label(visit.homeAddress, systemImage: "mappin.and.ellipse")
+                Text(visit.homeAddress)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
 
@@ -58,17 +46,19 @@ struct VisitCardView: View {
                 }
 
                 if isRunningLate {
-                    Label("Running late – consider calling ahead", systemImage: "clock.badge.exclamationmark")
-                        .font(.caption.bold())
+                    Text("Running late – call the patient ahead")
+                        .font(.caption)
+                        .bold()
                         .foregroundColor(.red)
                 }
+
+                if visit.status.isClosed {
+                    Text(visit.status.rawValue)
+                        .font(.caption)
+                        .bold()
+                        .foregroundColor(.green)
+                }
             } //: VStack
-
-            Spacer(minLength: 0)
-
-            Image(systemName: visit.status.symbolName)
-                .foregroundColor(statusColor)
-                .accessibilityLabel(visit.status.rawValue)
         } //: HStack
         .padding(.vertical, 6)
     }
@@ -81,14 +71,12 @@ struct VisitCardView_Previews: PreviewProvider {
             patientID: UUID(),
             patientName: "Margaret Thompson",
             homeAddress: "14 Wattle Street, Parramatta NSW 2150",
-            contactNumber: "0412 345 678",
             clinicalAlert: "Dog on premises – call ahead",
             careType: .woundCare,
             scheduledStart: Date(),
             durationMinutes: 45
         )
-        List {
-            VisitCardView(visit: sampleVisit, isRunningLate: true)
-        }
+        VisitCardView(visit: sampleVisit, isRunningLate: true)
+            .previewLayout(.sizeThatFits)
     }
 }

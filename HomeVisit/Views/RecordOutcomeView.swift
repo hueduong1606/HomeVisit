@@ -2,7 +2,7 @@
 //  HomeVisit
 //
 //  Screen 3 – document the visit at the door: care completed (clinical note)
-//  or no access (reason). Business rules live in RecordVisitOutcomeUseCase.
+//  or no access (reason). The rules live in RecordVisitOutcomeUseCase.
 
 import SwiftUI
 
@@ -12,7 +12,7 @@ struct RecordOutcomeView: View {
     @StateObject var viewModel: RecordOutcomeViewModel
     var onOutcomeSaved: (CareVisit) -> Void
 
-    // Used to dismiss the sheet programmatically
+    // A binding to the presentation mode, used to dismiss the sheet
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     //MARK: - INITIALIZER
@@ -26,18 +26,11 @@ struct RecordOutcomeView: View {
         NavigationView {
             ZStack(alignment: .top) {
                 Form {
-                    // Which visit is being documented
-                    Section {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(viewModel.visit.patientName)
-                                .font(.headline)
-                            Text("\(viewModel.visit.careType.rawValue) · \(viewModel.visit.scheduledStart.formatted(date: .omitted, time: .shortened))")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                        }
+                    Section(header: Text("Patient")) {
+                        Text(viewModel.visit.patientName)
+                            .font(.headline)
                     }
 
-                    // Outcome picker
                     Section(header: Text("Outcome")) {
                         Picker("Outcome", selection: $viewModel.outcome) {
                             ForEach(VisitOutcome.allCases) { outcome in
@@ -47,13 +40,16 @@ struct RecordOutcomeView: View {
                         .pickerStyle(.segmented)
                     }
 
-                    // Clinical note
-                    Section(
-                        header: Text(viewModel.outcome.notePrompt),
-                        footer: Text(viewModel.noteGuidance)
-                    ) {
+                    Section(header: Text("Clinical note"), footer: Text(viewModel.noteCounter)) {
                         TextEditor(text: $viewModel.clinicalNote)
-                            .frame(minHeight: 160)
+                            .frame(minHeight: 150)
+                    }
+
+                    Button("Save Outcome") {
+                        if let documentedVisit = viewModel.saveOutcome() {
+                            onOutcomeSaved(documentedVisit)
+                            presentationMode.wrappedValue.dismiss() // Dismiss the sheet
+                        }
                     }
                 } //: Form
 
@@ -63,24 +59,10 @@ struct RecordOutcomeView: View {
                     }
                 }
             } //: ZStack
-            .animation(.spring(), value: viewModel.errorMessage)
             .navigationTitle("Record Visit Outcome")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save Outcome") {
-                        if let documentedVisit = viewModel.saveOutcome() {
-                            onOutcomeSaved(documentedVisit)
-                            presentationMode.wrappedValue.dismiss() // Dismiss the sheet
-                        }
-                    }
-                }
-            }
+            .navigationBarItems(leading: Button("Cancel") {
+                presentationMode.wrappedValue.dismiss()
+            })
         } //: NavigationView
     }
 }
@@ -90,15 +72,12 @@ struct RecordOutcomeView_Previews: PreviewProvider {
     static var previews: some View {
         let sampleVisit = CareVisit(
             patientID: UUID(),
-            patientName: "Arthur Nguyen",
-            homeAddress: "3/7 Banksia Road, Granville NSW 2142",
-            careType: .medicationReview,
+            patientName: "Margaret Thompson",
+            homeAddress: "14 Wattle Street, Parramatta NSW 2150",
+            careType: .woundCare,
             scheduledStart: Date(),
-            durationMinutes: 30
+            durationMinutes: 45
         )
-        RecordOutcomeView(
-            viewModel: RecordOutcomeViewModel(visit: sampleVisit, dependencies: .preview),
-            onOutcomeSaved: { _ in }
-        )
+        RecordOutcomeView(viewModel: RecordOutcomeViewModel(visit: sampleVisit, dependencies: .preview), onOutcomeSaved: { _ in })
     }
 }

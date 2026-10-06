@@ -1,9 +1,8 @@
 //  ErrorBannerView.swift
 //  HomeVisit
 //
-//  A dismissable banner shown at the top of a screen when a Use Case
-//  rejects an action. The message is always nurse-facing:
-//  what went wrong + what to do next.
+//  A dismissable banner shown at the top of a screen when a Use Case rejects
+//  an action. The message tells the nurse what went wrong and what to do next.
 
 import SwiftUI
 
@@ -21,9 +20,8 @@ struct ErrorBannerView: View {
             HStack(spacing: 8) {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .foregroundColor(.white)
-                Text("Check this before you continue")
+                Text("Check before you continue")
                     .font(.headline)
-                    .fontWeight(.semibold)
                     .foregroundColor(.white)
                 Spacer()
 
@@ -36,24 +34,21 @@ struct ErrorBannerView: View {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.white.opacity(0.8))
                 }
-                .accessibilityLabel("Dismiss message")
             } //: HStack
 
-            // Nurse-facing message body
+            // Nurse-facing message
             Text(message)
                 .font(.subheadline)
-                .foregroundColor(.white.opacity(0.95))
+                .foregroundColor(.white)
                 .fixedSize(horizontal: false, vertical: true)
         } //: VStack
         .padding(14)
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.red.opacity(0.92))
-                .shadow(color: .black.opacity(0.2), radius: 6, y: 3)
         )
         .padding(.horizontal, 12)
         .padding(.top, 8)
-        .transition(.move(edge: .top).combined(with: .opacity))
         .zIndex(1)
     }
 }
@@ -61,11 +56,7 @@ struct ErrorBannerView: View {
 //MARK: - PREVIEW
 struct ErrorBannerView_Previews: PreviewProvider {
     static var previews: some View {
-        ErrorBannerView(
-            message: "This visit overlaps your 10:00 AM visit with Arthur Nguyen. Pick a start time after that visit finishes.",
-            onDismiss: {}
-        )
-        .previewLayout(.sizeThatFits)
-        .padding()
+        ErrorBannerView(message: "This visit overlaps your visit with Arthur Nguyen. Pick a start time after that visit finishes.", onDismiss: {})
+            .previewLayout(.sizeThatFits)
     }
 }

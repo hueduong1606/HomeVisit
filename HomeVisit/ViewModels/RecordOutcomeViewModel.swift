@@ -22,20 +22,10 @@ class RecordOutcomeViewModel: ObservableObject {
     }
 
     //MARK: - COMPUTED PROPERTIES
-    var noteCharacterCount: Int {
-        clinicalNote.trimmingCharacters(in: .whitespacesAndNewlines).count
-    }
-
-    var minimumNoteLength: Int {
-        RecordVisitOutcomeUseCase.minimumNoteLength
-    }
-
-    // Live guidance under the note field
-    var noteGuidance: String {
-        if noteCharacterCount >= minimumNoteLength {
-            return "Ready to save to the clinical record."
-        }
-        return "\(minimumNoteLength - noteCharacterCount) more characters needed."
+    // Live counter under the note, e.g. "4 / 10 characters"
+    var noteCounter: String {
+        let count = clinicalNote.trimmingCharacters(in: .whitespacesAndNewlines).count
+        return "\(count) / \(RecordVisitOutcomeUseCase.minimumNoteLength) characters minimum"
     }
 
     //MARK: - FUNCTION
@@ -43,15 +33,10 @@ class RecordOutcomeViewModel: ObservableObject {
     // Returns the documented visit, or nil (with errorMessage set) if a business rule failed
     func saveOutcome() -> CareVisit? {
         do {
-            let documentedVisit = try recordVisitOutcome.execute(
-                visitID: visit.id,
-                outcome: outcome,
-                clinicalNote: clinicalNote
-            )
-            errorMessage = nil
+            let documentedVisit = try recordVisitOutcome.execute(visitID: visit.id, outcome: outcome, clinicalNote: clinicalNote)
             return documentedVisit
         } catch {
-            errorMessage = NurseFacingMessage.from(error)
+            errorMessage = error.localizedDescription
             return nil
         }
     }
