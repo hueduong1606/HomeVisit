@@ -1,9 +1,9 @@
 //  VisitReminderScheduler.swift
 //  HomeVisit
 //
-//  Schedules a local notification before each outstanding visit.
-//  Notifications use the VISIT_REMINDER category, so the
-//  VisitReminderNotification extension draws them as a rich visit card.
+//  Schedules a local notification 15 minutes before each outstanding visit.
+//  Every reminder uses the VISIT_REMINDER category, so the
+//  VisitReminderNotification extension shows it as a visit card.
 
 import Foundation
 import UserNotifications
@@ -13,21 +13,14 @@ enum VisitReminderScheduler {
     //MARK: - PROPERTIES
     // Business rule: remind the nurse 15 minutes before the visit so there is time to drive
     static let reminderLeadTimeMinutes = 15
-    static let reminderIdentifierPrefix = "visit-reminder-"
-    static let previewIdentifierPrefix = "preview-reminder-"
 
     //MARK: - SETUP
 
-    // Registers the category the content extension listens for, plus a "Start Visit" button
+    // Registers the category that the notification content extension listens for
     static func registerReminderCategory() {
-        let startVisitAction = UNNotificationAction(
-            identifier: VisitReminderPayload.startVisitActionIdentifier,
-            title: "Start Visit",
-            options: [.foreground]
-        )
         let visitReminderCategory = UNNotificationCategory(
             identifier: VisitReminderPayload.categoryIdentifier,
-            actions: [startVisitAction],
+            actions: [],
             intentIdentifiers: [],
             options: []
         )
@@ -35,83 +28,50 @@ enum VisitReminderScheduler {
     }
 
     // Asks once for permission to show visit reminders
-    static func requestPermission(completion: @escaping (Bool) -> Void) {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-            if let error = error {
-                print("Reminder permission request failed: \(error.localizedDescription)")
-            }
-            DispatchQueue.main.async {
-                completion(granted)
-            }
+    static func requestPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, _ in
+            print("Visit reminders allowed: \(granted)")
         }
     }
 
     //MARK: - SCHEDULING
 
-    // Replaces every pending visit reminder with one per outstanding visit
-    static func reschedule(for visits: [CareVisit], now: Date = Date()) {
+    // Replaces all pending reminders with one per outstanding visit
+    static func rescheduleReminders(for visits: [CareVisit]) {
         let center = UNUserNotificationCenter.current()
+        center.removeAllPendingNotificationRequests()
 
-        center.getPendingNotificationRequests { pendingRequests in
-            // Remove reminders for visits that were moved, documented or cancelled
-            let staleIdentifiers = pendingRequests
-                .map { $0.identifier }
-                .filter { $0.hasPrefix(VisitReminderScheduler.reminderIdentifierPrefix) }
-            center.removePendingNotificationRequests(withIdentifiers: staleIdentifiers)
-
-            for visit in visits where visit.status == .scheduled {
-                let reminderDate = visit.scheduledStart.addingTimeInterval(TimeInterval(-VisitReminderScheduler.reminderLeadTimeMinutes * 60))
-                guard reminderDate > now else { continue } // Too late to remind
-
-                let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: reminderDate)
-                let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-                let request = UNNotificationRequest(
-                    identifier: VisitReminderScheduler.reminderIdentifierPrefix + visit.id.uuidString,
-                    content: VisitReminderScheduler.makeReminderContent(for: visit),
-                    trigger: trigger
-                )
-                center.add(request) { error in
-                    if let error = error {
-                        print("Reminder for \(visit.patientName) could not be scheduled: \(error.localizedDescription)")
-                    }
-                }
+        for visit in visits {
+            let reminderDate = visit.scheduledStart.addingTimeInterval(TimeInterval(-reminderLeadTimeMinutes * 60))
+            let secondsUntilReminder = reminderDate.timeIntervalSinceNow
+            if secondsUntilReminder > 0 {
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: secondsUntilReminder, repeats: false)
+                let request = UNNotificationRequest(identifier: visit.id.uuidString, content: makeReminderContent(for: visit), trigger: trigger)
+                center.add(request, withCompletionHandler: nil)
             }
         }
     }
 
-    // Lets the nurse (or a marker) see the rich reminder straight away – fires in 5 seconds
+    // Lets the nurse see the visit reminder straight away – it arrives in 5 seconds
     static func sendPreviewReminder(for visit: CareVisit) {
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
-        let request = UNNotificationRequest(
-            identifier: previewIdentifierPrefix + visit.id.uuidString,
-            content: makeReminderContent(for: visit),
-            trigger: trigger
-        )
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print("Preview reminder could not be scheduled: \(error.localizedDescription)")
-            }
-        }
+        let request = UNNotificationRequest(identifier: "preview-" + visit.id.uuidString, content: makeReminderContent(for: visit), trigger: trigger)
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
 
     //MARK: - CONTENT
-
     static func makeReminderContent(for visit: CareVisit) -> UNMutableNotificationContent {
         let payload = VisitReminderPayload(
-            visitID: visit.id.uuidString,
             patientName: visit.patientName,
             homeAddress: visit.homeAddress,
             careTypeTitle: visit.careType.rawValue,
-            careTypeSymbol: visit.careType.symbolName,
             scheduledStart: visit.scheduledStart,
-            durationMinutes: visit.durationMinutes,
             clinicalAlert: visit.clinicalAlert
         )
 
         let content = UNMutableNotificationContent()
         content.title = "Next visit: \(visit.patientName)"
-        content.subtitle = visit.careType.rawValue
-        content.body = "\(visit.scheduledStart.formatted(date: .omitted, time: .shortened)) · \(visit.homeAddress)"
+        content.body = "\(visit.careType.rawValue) · \(visit.homeAddress)"
         content.sound = .default
         content.categoryIdentifier = VisitReminderPayload.categoryIdentifier // Routes to the content extension
         content.userInfo = payload.userInfo

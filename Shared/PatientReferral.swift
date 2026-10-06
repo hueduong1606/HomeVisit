@@ -1,45 +1,23 @@
 //  PatientReferral.swift
 //  Shared by: ReferralShareExtension (writes) and HomeVisit app (reads)
 //
-//  A referral a nurse received from a GP or hospital (email, message, notes)
-//  and shared into HomeVisit. It waits in the Referral Inbox until the nurse
-//  admits the patient to the caseload.
+//  A referral a nurse received from a GP or hospital and shared into HomeVisit.
+//  It waits in "Referrals waiting" on the Caseload screen until the patient is admitted.
 
 import Foundation
 
-struct PatientReferral: Codable, Equatable, Identifiable {
+struct PatientReferral: Codable, Identifiable, Equatable {
     //MARK: - PROPERTIES
     let id: UUID
     let receivedAt: Date
-    var suggestedPatientName: String     // Pre-filled from "Patient:" line, editable
-    var suggestedHomeAddress: String     // Pre-filled from "Address:" line, editable
-    var referralText: String             // Full text exactly as it was shared
+    var patientName: String      // Typed by the nurse in the share sheet
+    var referralText: String     // The referral exactly as it was shared
 
     //MARK: - INITIALIZER
-    init(
-        id: UUID = UUID(),
-        receivedAt: Date = Date(),
-        suggestedPatientName: String,
-        suggestedHomeAddress: String,
-        referralText: String
-    ) {
+    init(id: UUID = UUID(), receivedAt: Date = Date(), patientName: String, referralText: String) {
         self.id = id
         self.receivedAt = receivedAt
-        self.suggestedPatientName = suggestedPatientName
-        self.suggestedHomeAddress = suggestedHomeAddress
+        self.patientName = patientName
         self.referralText = referralText
-    }
-
-    //MARK: - COMPUTED PROPERTIES
-    // Title shown in the inbox list
-    var inboxTitle: String {
-        suggestedPatientName.isEmpty ? "Unnamed referral" : suggestedPatientName
-    }
-
-    // First line of the referral, used as a preview under the title
-    var previewLine: String {
-        referralText
-            .components(separatedBy: .newlines)
-            .first { !$0.trimmingCharacters(in: .whitespaces).isEmpty } ?? ""
     }
 }

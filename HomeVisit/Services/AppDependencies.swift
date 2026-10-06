@@ -1,16 +1,20 @@
 //  AppDependencies.swift
 //  HomeVisit
 //
-//  Builds the repository, the extension sync and every Use Case in one place.
-//  ViewModels ask this object for Use Cases, so they never see Core Data.
+//  Creates the repository, the extension sync and the referral inbox in one place.
+//  ViewModels get their Use Cases from here, so they never see Core Data.
 
 import Foundation
 
-final class AppDependencies {
+class AppDependencies {
 
     //MARK: - SHARED INSTANCES
     // Real Core Data store in the App Group container
-    static let live = AppDependencies(persistenceController: .shared)
+    static let live = AppDependencies(
+        repository: CoreDataCaseloadRepository(persistenceController: .shared),
+        roundSync: nil,
+        referralInbox: AppGroupReferralInbox()
+    )
 
     // In-memory store with sample data, used by SwiftUI previews
     static let preview = AppDependencies(
@@ -24,19 +28,11 @@ final class AppDependencies {
     let roundSync: RoundSyncing
     let referralInbox: ReferralInbox
 
-    //MARK: - INITIALIZERS
-    convenience init(persistenceController: PersistenceController) {
-        let repository = CoreDataCaseloadRepository(persistenceController: persistenceController)
-        self.init(
-            repository: repository,
-            roundSync: WidgetAndReminderRoundSync(repository: repository),
-            referralInbox: AppGroupReferralInbox()
-        )
-    }
-
-    init(repository: CaseloadRepository, roundSync: RoundSyncing, referralInbox: ReferralInbox) {
+    //MARK: - INITIALIZER
+    // When no roundSync is given, the real widget + reminder sync is used
+    init(repository: CaseloadRepository, roundSync: RoundSyncing?, referralInbox: ReferralInbox) {
         self.repository = repository
-        self.roundSync = roundSync
+        self.roundSync = roundSync ?? WidgetAndReminderRoundSync(repository: repository)
         self.referralInbox = referralInbox
     }
 
@@ -53,19 +49,7 @@ final class AppDependencies {
         RecordVisitOutcomeUseCase(repository: repository, roundSync: roundSync)
     }
 
-    func makeCancelHomeVisit() -> CancelHomeVisitUseCase {
-        CancelHomeVisitUseCase(repository: repository, roundSync: roundSync)
-    }
-
     func makeAdmitPatientToCaseload() -> AdmitPatientToCaseloadUseCase {
         AdmitPatientToCaseloadUseCase(repository: repository, referralInbox: referralInbox)
-    }
-
-    func makeReviewCaseload() -> ReviewCaseloadUseCase {
-        ReviewCaseloadUseCase(repository: repository)
-    }
-
-    func makeDischargePatient() -> DischargePatientUseCase {
-        DischargePatientUseCase(repository: repository, roundSync: roundSync)
     }
 }

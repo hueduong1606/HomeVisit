@@ -1,8 +1,8 @@
 //  CaseloadView.swift
 //  HomeVisit
 //
-//  Screen 5 – every patient the nurse is responsible for.
-//  Patients without a visit booked this week are flagged first.
+//  Screen 5 – the nurse's caseload. Referrals shared in through the
+//  Share Extension wait at the top until the patient is admitted.
 
 import SwiftUI
 
@@ -10,43 +10,72 @@ struct CaseloadView: View {
 
     //MARK: - PROPERTIES
     @ObservedObject var viewModel: CaseloadViewModel
-    @State private var isShowingAdmitPatient = false
+    @State private var showAdmitPatientView = false
+    @State private var selectedReferral: PatientReferral? = nil
 
     //MARK: - BODY
     var body: some View {
         NavigationView {
-            ZStack(alignment: .top) {
-                Group {
-                    if viewModel.entries.isEmpty {
-                        ContentUnavailableView(
-                            "No patients on your caseload",
-                            systemImage: "person.2.slash",
-                            description: Text("Tap + to admit a patient, or accept a GP referral from the Referrals tab.")
-                        )
-                    } else {
-                        caseloadList
+            List {
+                // Referrals saved by the Share Extension (App Group)
+                Section(header: Text("Referrals waiting")) {
+                    if viewModel.referrals.isEmpty {
+                        Text("No referrals waiting. Share a GP referral from Notes, Mail or Messages to HomeVisit.")
+                            .foregroundColor(.secondary)
                     }
-                } //: Group
+                    ForEach(viewModel.referrals) { referral in
+                        Button {
+                            selectedReferral = referral
+                        } label: {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(referral.patientName)
+                                    .font(.headline)
+                                Text(referral.referralText)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .lineLimit(2)
+                                Text("Tap to admit to caseload")
+                                    .font(.caption)
+                                    .foregroundColor(.accentColor)
+                            }
+                        }
+                    } //: ForEach
+                } //: Section
 
-                if let message = viewModel.errorMessage {
-                    ErrorBannerView(message: message) {
-                        viewModel.errorMessage = nil
+                // Patients on the caseload
+                Section(header: Text("Patients")) {
+                    if viewModel.patients.isEmpty {
+                        Text("No patients on your caseload yet. Tap the person icon to admit a patient.")
+                            .foregroundColor(.secondary)
                     }
-                }
-            } //: ZStack
-            .animation(.spring(), value: viewModel.errorMessage)
-            .navigationTitle("Caseload")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        isShowingAdmitPatient = true
-                    } label: {
-                        Image(systemName: "person.badge.plus")
-                    }
-                    .accessibilityLabel("Admit patient to caseload")
-                }
+                    ForEach(viewModel.patients) { patient in
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(patient.fullName)
+                                .font(.headline)
+                            Text(patient.homeAddress)
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            if patient.hasClinicalAlert {
+                                Label(patient.clinicalAlert, systemImage: "exclamationmark.triangle.fill")
+                                    .font(.caption)
+                                    .foregroundColor(.orange)
+                            }
+                        }
+                    } //: ForEach
+                } //: Section
+            } //: List
+            .sheet(item: $selectedReferral, onDismiss: {
+                viewModel.loadCaseload()
+            }) { referral in
+                AdmitPatientView(viewModel: AdmitPatientViewModel(referral: referral, dependencies: viewModel.dependencies))
             }
-            .sheet(isPresented: $isShowingAdmitPatient, onDismiss: {
+            .navigationTitle("Caseload")
+            .navigationBarItems(trailing: Button(action: {
+                showAdmitPatientView = true
+            }) {
+                Image(systemName: "person.badge.plus")
+            })
+            .sheet(isPresented: $showAdmitPatientView, onDismiss: {
                 viewModel.loadCaseload()
             }) {
                 AdmitPatientView(viewModel: AdmitPatientViewModel(dependencies: viewModel.dependencies))
@@ -55,85 +84,6 @@ struct CaseloadView: View {
                 viewModel.loadCaseload()
             }
         } //: NavigationView
-    }
-
-    //MARK: - CASELOAD LIST
-    private var caseloadList: some View {
-        List {
-            // Continuity-of-care warning from ReviewCaseloadUseCase
-            if viewModel.patientsNeedingVisitCount > 0 {
-                Section {
-                    Label(
-                        "\(viewModel.patientsNeedingVisitCount) patient(s) have no visit booked in the next \(ReviewCaseloadUseCase.continuityOfCareWindowDays) days",
-                        systemImage: "calendar.badge.exclamationmark"
-                    )
-                    .foregroundColor(.orange)
-                }
-            }
-
-            Section(header: Text("Patients")) {
-                ForEach(viewModel.entries) { entry in
-                    NavigationLink(destination: PatientDetailView(viewModel: viewModel, patientID: entry.id)) {
-                        PatientRowView(entry: entry)
-                    }
-                    .swipeActions(edge: .trailing) {
-                        Button {
-                            viewModel.discharge(entry)
-                        } label: {
-                            Label("Discharge", systemImage: "person.fill.xmark")
-                        }
-                        .tint(.red)
-                    }
-                } //: ForEach
-            } //: Section
-        } //: List
-        .listStyle(.insetGrouped)
-        .refreshable {
-            viewModel.loadCaseload()
-        }
-    }
-}
-
-// MARK: - PatientRowView
-struct PatientRowView: View {
-
-    //MARK: - PROPERTIES
-    let entry: CaseloadEntry
-
-    //MARK: - BODY
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack {
-                Text(entry.patient.fullName)
-                    .font(.headline)
-                if entry.patient.hasClinicalAlert {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundColor(.orange)
-                        .accessibilityLabel("Has clinical alert")
-                }
-            }
-
-            Text(entry.patient.homeAddress)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-
-            if let nextVisit = entry.nextScheduledVisit {
-                HStack(spacing: 4) {
-                    Image(systemName: "calendar")
-                    Text("Next visit")
-                    Text(nextVisit.scheduledStart, style: .date)
-                }
-                .font(.caption)
-                .foregroundColor(.accentColor)
-            }
-
-            if entry.needsVisitBooked {
-                Label("Needs a visit booked", systemImage: "calendar.badge.exclamationmark")
-                    .font(.caption.bold())
-                    .foregroundColor(.orange)
-            }
-        } //: VStack
-        .padding(.vertical, 4)
     }
 }
 

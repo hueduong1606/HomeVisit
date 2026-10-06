@@ -1,8 +1,8 @@
 //  AdmitPatientViewModel.swift
 //  HomeVisit
 //
-//  Holds the "Admit to Caseload" form. When opened from the Referral Inbox
-//  the form is pre-filled from the shared referral.
+//  Holds the "Admit to Caseload" form. When opened from a shared referral,
+//  the patient's name and the referral text are filled in for the nurse.
 
 import Foundation
 
@@ -11,7 +11,6 @@ class AdmitPatientViewModel: ObservableObject {
     //MARK: - PROPERTIES
     @Published var fullName: String = ""
     @Published var homeAddress: String = ""
-    @Published var contactNumber: String = ""
     @Published var clinicalAlert: String = ""
     @Published var referralNote: String = ""
     @Published var errorMessage: String? = nil
@@ -24,42 +23,29 @@ class AdmitPatientViewModel: ObservableObject {
         self.referral = referral
         self.admitPatientToCaseload = dependencies.makeAdmitPatientToCaseload()
 
-        // Pre-fill from the referral so the nurse only checks and corrects
+        // Pre-fill from the shared referral
         if let referral = referral {
-            self.fullName = referral.suggestedPatientName
-            self.homeAddress = referral.suggestedHomeAddress
+            self.fullName = referral.patientName
             self.referralNote = referral.referralText
         }
     }
 
-    //MARK: - COMPUTED PROPERTIES
-    var isFromReferral: Bool {
-        referral != nil
-    }
-
-    var canAdmit: Bool {
-        !fullName.trimmingCharacters(in: .whitespaces).isEmpty &&
-        !homeAddress.trimmingCharacters(in: .whitespaces).isEmpty
-    }
-
     //MARK: - FUNCTION
 
-    // Returns the admitted patient, or nil (with errorMessage set) if a business rule failed
-    func admitPatient() -> Patient? {
+    // Returns true when the patient is on the caseload
+    func admitPatient() -> Bool {
         do {
-            let patient = try admitPatientToCaseload.execute(
+            _ = try admitPatientToCaseload.execute(
                 fullName: fullName,
                 homeAddress: homeAddress,
-                contactNumber: contactNumber,
                 clinicalAlert: clinicalAlert,
                 referralNote: referralNote,
                 fromReferral: referral?.id
             )
-            errorMessage = nil
-            return patient
+            return true
         } catch {
-            errorMessage = NurseFacingMessage.from(error)
-            return nil
+            errorMessage = error.localizedDescription
+            return false
         }
     }
 }

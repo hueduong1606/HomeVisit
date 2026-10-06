@@ -1,8 +1,8 @@
 //  HomeVisitApp.swift
 //  HomeVisit
 //
-//  App entry point. Registers the visit-reminder notification category used by
-//  the VisitReminderNotification content extension.
+//  App entry point. Registers the visit reminder category used by the
+//  VisitReminderNotification content extension.
 
 import SwiftUI
 import UserNotifications
@@ -12,7 +12,7 @@ struct HomeVisitApp: App {
 
     //MARK: - INITIALIZER
     init() {
-        // Category must be registered so reminders show the rich visit card and "Start Visit" button
+        // The category routes reminders to the notification content extension
         VisitReminderScheduler.registerReminderCategory()
         // Show reminders as banners even while the nurse is using the app
         UNUserNotificationCenter.current().delegate = ReminderPresentationDelegate.shared

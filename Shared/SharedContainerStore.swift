@@ -1,9 +1,8 @@
 //  SharedContainerStore.swift
 //  Shared by: HomeVisit app, NextVisitWidget, ReferralShareExtension
 //
-//  Reads and writes the JSON files that live in the App Group container.
-//  Each extension runs in its own process, so files in the shared container
-//  are how they talk to the main app.
+//  Reads and writes the JSON files in the App Group container.
+//  Each extension runs in its own process, so these files are how they talk to the app.
 
 import Foundation
 
@@ -15,59 +14,46 @@ enum SharedContainerStore {
     static func saveRoundSnapshot(_ snapshot: RoundSnapshot) {
         do {
             let data = try JSONEncoder().encode(snapshot)
-            try data.write(to: AppGroup.todaysRoundSnapshotURL, options: .atomic)
+            try data.write(to: AppGroup.todaysRoundSnapshotURL)
         } catch {
             print("Could not publish today's round to the widget: \(error.localizedDescription)")
         }
     }
 
-    // Called by the widget's timeline provider
+    // Called by the widget
     static func loadRoundSnapshot() -> RoundSnapshot? {
         guard let data = try? Data(contentsOf: AppGroup.todaysRoundSnapshotURL) else {
-            return nil // App has not published a round yet
+            return nil // The app has not published a round yet
         }
-        do {
-            return try JSONDecoder().decode(RoundSnapshot.self, from: data)
-        } catch {
-            print("Today's round snapshot could not be read: \(error.localizedDescription)")
-            return nil
-        }
+        return try? JSONDecoder().decode(RoundSnapshot.self, from: data)
     }
 
     //MARK: - REFERRAL INBOX (share extension -> app)
 
     static func loadReferrals() -> [PatientReferral] {
         guard let data = try? Data(contentsOf: AppGroup.referralInboxURL) else {
-            return [] // Inbox file does not exist until the first referral is shared
+            return [] // No referral has been shared yet
         }
-        do {
-            let referrals = try JSONDecoder().decode([PatientReferral].self, from: data)
-            return referrals.sorted { $0.receivedAt < $1.receivedAt } // Oldest referral first
-        } catch {
-            print("Referral inbox could not be read: \(error.localizedDescription)")
-            return []
-        }
+        let referrals = (try? JSONDecoder().decode([PatientReferral].self, from: data)) ?? []
+        return referrals.sorted { $0.receivedAt < $1.receivedAt } // Oldest referral first
     }
 
-    static func saveReferrals(_ referrals: [PatientReferral]) throws {
-        let data = try JSONEncoder().encode(referrals)
-        try data.write(to: AppGroup.referralInboxURL, options: .atomic)
-    }
-
-    // Called by the share extension when the nurse taps "Save to Referral Inbox"
+    // Called by the share extension when the nurse taps "Save Referral"
     static func appendReferral(_ referral: PatientReferral) throws {
         var referrals = loadReferrals()
         referrals.append(referral)
-        try saveReferrals(referrals)
+        let data = try JSONEncoder().encode(referrals)
+        try data.write(to: AppGroup.referralInboxURL)
     }
 
-    // Called by the app once the patient is admitted or the referral is declined
+    // Called by the app once the patient has been admitted
     static func removeReferral(id: UUID) {
         let remainingReferrals = loadReferrals().filter { $0.id != id }
         do {
-            try saveReferrals(remainingReferrals)
+            let data = try JSONEncoder().encode(remainingReferrals)
+            try data.write(to: AppGroup.referralInboxURL)
         } catch {
-            print("Referral could not be removed from the inbox: \(error.localizedDescription)")
+            print("Referral could not be removed: \(error.localizedDescription)")
         }
     }
 }

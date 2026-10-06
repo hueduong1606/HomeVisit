@@ -1,0 +1,140 @@
+//  HomeVisitUseCaseTests.swift
+//  HomeVisitTests
+//
+//  Six tests across the four Use Cases, using the mock repository only.
+//  Happy paths, boundary conditions and domain error cases.
+
+import Testing
+import Foundation
+@testable import HomeVisit
+
+@MainActor
+struct HomeVisitUseCaseTests {
+
+    //MARK: - PROPERTIES
+    // A fresh mock for every test – no setUp() needed
+    let repository = MockCaseloadRepository()
+    let roundSync = MockRoundSync()
+    let referralInbox = MockReferralInbox()
+
+    //MARK: - SCHEDULE HOME VISIT
+
+    // 1. Happy path
+    @Test func bookingVisitForPatientOnCaseload_addsItToTheRoundAndRefreshesWidget() throws {
+        // --- GIVEN --- Margaret is on the caseload, it is 8:00 AM
+        repository.patients = [TestData.margaret]
+        let scheduleHomeVisit = ScheduleHomeVisitUseCase(repository: repository, roundSync: roundSync)
+
+        // --- WHEN --- the nurse books her for 10:00 AM
+        let visit = try scheduleHomeVisit.execute(
+            patientID: TestData.margaret.id,
+            careType: .woundCare,
+            scheduledStart: TestData.tuesday(hour: 10),
+            durationMinutes: 45,
+            now: TestData.tuesday(hour: 8)
+        )
+
+        // --- THEN ---
+        #expect(repository.visits.count == 1, "The visit should be on the round")
+        #expect(visit.clinicalAlert == "Dog on premises – call ahead", "The safety alert must travel with the visit")
+        #expect(roundSync.roundDidChangeCallCount == 1, "The widget must be refreshed")
+    }
+
+    // 2. Domain error
+    @Test func visitOverlappingAnotherVisit_isRejectedAndNamesTheClashingPatient() {
+        // --- GIVEN --- Arthur is booked 10:00–10:45
+        repository.patients = [TestData.margaret, TestData.arthur]
+        repository.visits = [TestData.visit(for: TestData.arthur, at: TestData.tuesday(hour: 10))]
+        let scheduleHomeVisit = ScheduleHomeVisitUseCase(repository: repository, roundSync: roundSync)
+
+        // --- WHEN / THEN --- Margaret at 10:30 clashes with Arthur
+        #expect(throws: ScheduleHomeVisitError.clashesWithVisit(patientName: "Arthur Nguyen")) {
+            try scheduleHomeVisit.execute(
+                patientID: TestData.margaret.id,
+                careType: .woundCare,
+                scheduledStart: TestData.tuesday(hour: 10, minute: 30),
+                durationMinutes: 30,
+                now: TestData.tuesday(hour: 8)
+            )
+        }
+        #expect(repository.visits.count == 1, "The clashing visit must not be saved")
+    }
+
+    //MARK: - RECORD VISIT OUTCOME
+
+    // 3. Boundary condition
+    @Test func clinicalNoteWithNineCharacters_isRejected_butTenCharacters_isAccepted() throws {
+        // --- GIVEN --- a visit still to be documented
+        let visit = TestData.visit(for: TestData.margaret, at: TestData.tuesday(hour: 9))
+        repository.patients = [TestData.margaret]
+        repository.visits = [visit]
+        let recordVisitOutcome = RecordVisitOutcomeUseCase(repository: repository, roundSync: roundSync)
+
+        // --- WHEN / THEN --- 9 characters is one short of the minimum
+        #expect(throws: RecordVisitOutcomeError.clinicalNoteTooShort(minimumCharacters: 10)) {
+            try recordVisitOutcome.execute(visitID: visit.id, outcome: .completed, clinicalNote: "Dressed o")
+        }
+
+        // --- WHEN / THEN --- exactly 10 characters is accepted
+        let documentedVisit = try recordVisitOutcome.execute(visitID: visit.id, outcome: .completed, clinicalNote: "Dressed ok")
+        #expect(documentedVisit.status == .completed)
+    }
+
+    // 4. Domain error
+    @Test func visitAlreadyDocumented_cannotBeDocumentedAgain() throws {
+        // --- GIVEN --- the nurse could not get in and recorded "No access"
+        let visit = TestData.visit(for: TestData.margaret, at: TestData.tuesday(hour: 9))
+        repository.patients = [TestData.margaret]
+        repository.visits = [visit]
+        let recordVisitOutcome = RecordVisitOutcomeUseCase(repository: repository, roundSync: roundSync)
+        _ = try recordVisitOutcome.execute(visitID: visit.id, outcome: .noAccess, clinicalNote: "No answer at the door, phoned twice.")
+
+        // --- WHEN / THEN --- the clinical record cannot be overwritten
+        #expect(throws: RecordVisitOutcomeError.outcomeAlreadyRecorded) {
+            try recordVisitOutcome.execute(visitID: visit.id, outcome: .completed, clinicalNote: "Trying to change the record.")
+        }
+        #expect(repository.visits.first?.status == .noAccess)
+    }
+
+    //MARK: - ADMIT PATIENT TO CASELOAD
+
+    // 5. Happy path (referral from the Share Extension)
+    @Test func admittingPatientFromSharedReferral_addsToCaseloadAndClearsTheReferral() throws {
+        // --- GIVEN --- a referral waiting in the inbox
+        let referral = PatientReferral(patientName: "Beatrice Collins", referralText: "Post hip replacement – wound review within 48 hours.")
+        referralInbox.referrals = [referral]
+        let admitPatientToCaseload = AdmitPatientToCaseloadUseCase(repository: repository, referralInbox: referralInbox)
+
+        // --- WHEN ---
+        let patient = try admitPatientToCaseload.execute(
+            fullName: referral.patientName,
+            homeAddress: "5 Marsden Street, Parramatta NSW 2150",
+            referralNote: referral.referralText,
+            fromReferral: referral.id
+        )
+
+        // --- THEN ---
+        #expect(repository.patients.contains(patient))
+        #expect(referralInbox.referrals.isEmpty, "The referral leaves the inbox once the patient is admitted")
+    }
+
+    //MARK: - PLAN TODAY'S ROUND
+
+    // 6. Boundary condition
+    @Test func visitIsRunningLateOnlyAfterMoreThanFifteenMinutes_andRoundIsInTimeOrder() throws {
+        // --- GIVEN --- an 11:00 visit added before a 9:00 visit
+        let elevenAM = TestData.visit(for: TestData.arthur, at: TestData.tuesday(hour: 11))
+        let nineAM = TestData.visit(for: TestData.margaret, at: TestData.tuesday(hour: 9))
+        repository.visits = [elevenAM, nineAM]
+        let planTodaysRound = PlanTodaysRoundUseCase(repository: repository)
+
+        // --- WHEN --- the round is checked at exactly 15 and at 16 minutes past nine
+        let roundAtFifteenPast = try planTodaysRound.execute(on: TestData.tuesday(hour: 8), now: TestData.tuesday(hour: 9, minute: 15))
+        let roundAtSixteenPast = try planTodaysRound.execute(on: TestData.tuesday(hour: 8), now: TestData.tuesday(hour: 9, minute: 16))
+
+        // --- THEN ---
+        #expect(roundAtFifteenPast.nextVisit?.patientName == "Margaret Thompson", "9:00 comes before 11:00")
+        #expect(!roundAtFifteenPast.isRunningLate(nineAM), "Exactly 15 minutes is still on time")
+        #expect(roundAtSixteenPast.isRunningLate(nineAM), "16 minutes is running late")
+    }
+}

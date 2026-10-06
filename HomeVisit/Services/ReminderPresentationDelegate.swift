@@ -7,30 +7,19 @@
 import Foundation
 import UserNotifications
 
-final class ReminderPresentationDelegate: NSObject, UNUserNotificationCenterDelegate {
+class ReminderPresentationDelegate: NSObject, UNUserNotificationCenterDelegate {
 
     //MARK: - PROPERTIES
-    // UNUserNotificationCenter keeps a weak reference, so we hold the delegate here
+    // UNUserNotificationCenter only keeps a weak reference, so we keep the delegate here
     static let shared = ReminderPresentationDelegate()
 
     //MARK: - UNUserNotificationCenterDelegate
-
-    // Called when a reminder arrives while the app is in the foreground
+    // Called when a reminder arrives while the app is open
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        completionHandler([.banner, .list, .sound])
-    }
-
-    // Called when the nurse taps the reminder or its "Start Visit" button
-    func userNotificationCenter(
-        _ center: UNUserNotificationCenter,
-        didReceive response: UNNotificationResponse,
-        withCompletionHandler completionHandler: @escaping () -> Void
-    ) {
-        // Opening the app lands the nurse on Today's Round, which already lists this visit first
-        completionHandler()
+        completionHandler([.banner, .sound])
     }
 }

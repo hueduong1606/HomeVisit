@@ -4,16 +4,13 @@
         <attribute name="careTypeRaw" optional="YES" attributeType="String"/>
         <attribute name="durationMinutes" attributeType="Integer 16" defaultValueString="30" usesScalarValueType="YES"/>
         <attribute name="outcomeNote" optional="YES" attributeType="String"/>
-        <attribute name="outcomeRecordedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="scheduledStart" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="statusRaw" optional="YES" attributeType="String"/>
         <attribute name="visitID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <relationship name="patient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PatientRecord" inverseName="visits" inverseEntity="PatientRecord"/>
     </entity>
     <entity name="PatientRecord" representedClassName="PatientRecord" syncable="YES" codeGenerationType="class">
-        <attribute name="admittedOn" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="clinicalAlert" optional="YES" attributeType="String"/>
-        <attribute name="contactNumber" optional="YES" attributeType="String"/>
         <attribute name="fullName" optional="YES" attributeType="String"/>
         <attribute name="homeAddress" optional="YES" attributeType="String"/>
         <attribute name="patientID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>

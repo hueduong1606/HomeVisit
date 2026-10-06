@@ -2,13 +2,12 @@
 //  HomeVisit
 //
 //  Use Cases call roundDidChange() after every change to the nurse's round.
-//  The app implementation refreshes the widget and visit reminders;
+//  The app implementation refreshes the widget and the visit reminders;
 //  the unit tests use MockRoundSync to check it was called.
 
 import Foundation
 
 protocol RoundSyncing {
-    // Publish the latest round to the Home/Lock Screen widget and reschedule visit reminders
     func roundDidChange()
 }
 

@@ -15,13 +15,11 @@ class TodaysRoundViewModel: ObservableObject {
 
     let dependencies: AppDependencies
     private let planTodaysRound: PlanTodaysRoundUseCase
-    private let cancelHomeVisit: CancelHomeVisitUseCase
 
     //MARK: - INITIALIZER
     init(dependencies: AppDependencies = .live) {
         self.dependencies = dependencies
         self.planTodaysRound = dependencies.makePlanTodaysRound()
-        self.cancelHomeVisit = dependencies.makeCancelHomeVisit()
     }
 
     //MARK: - COMPUTED PROPERTIES
@@ -33,12 +31,16 @@ class TodaysRoundViewModel: ObservableObject {
         round?.closedVisits ?? []
     }
 
-    var hasNoVisitsToday: Bool {
-        (round?.totalVisitCount ?? 0) == 0
+    var progressSummary: String {
+        round?.progressSummary ?? ""
     }
 
-    var runningLateCount: Int {
-        round?.runningLateVisitIDs.count ?? 0
+    // Empty-state message in the nurse's words
+    var emptyRoundMessage: String {
+        if closedVisits.isEmpty {
+            return "No visits on today's round yet. Tap + to add a home visit."
+        }
+        return "Round complete – every visit today is documented."
     }
 
     //MARK: - FUNCTIONS
@@ -48,21 +50,11 @@ class TodaysRoundViewModel: ObservableObject {
         do {
             round = try planTodaysRound.execute()
         } catch {
-            errorMessage = NurseFacingMessage.from(error)
+            errorMessage = error.localizedDescription
         }
     }
 
     func isRunningLate(_ visit: CareVisit) -> Bool {
         round?.isRunningLate(visit) ?? false
-    }
-
-    // Swipe action "Cancel Visit" on an outstanding visit
-    func cancelVisit(_ visit: CareVisit) {
-        do {
-            try cancelHomeVisit.execute(visitID: visit.id)
-        } catch {
-            errorMessage = NurseFacingMessage.from(error)
-        }
-        loadRound() // Refresh so the list matches the round
     }
 }
