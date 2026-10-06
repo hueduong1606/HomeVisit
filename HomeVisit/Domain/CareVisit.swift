@@ -18,9 +18,6 @@ struct CareVisit: Identifiable, Equatable {
     var status: VisitStatus
     var outcomeNote: String
 
-    // Business rule: a visit counts as "running late" more than 15 minutes after its start time
-    static let lateArrivalThresholdMinutes = 15
-
     //MARK: - INITIALIZER
     init(
         id: UUID = UUID(),
@@ -63,9 +60,9 @@ struct CareVisit: Identifiable, Equatable {
         scheduledStart < otherVisit.scheduledEnd && otherVisit.scheduledStart < scheduledEnd
     }
 
-    // A scheduled visit is running late once the threshold has passed and no outcome is recorded
-    func isRunningLate(at now: Date) -> Bool {
-        let lateFrom = scheduledStart.addingTimeInterval(TimeInterval(CareVisit.lateArrivalThresholdMinutes * 60))
-        return status == .scheduled && now > lateFrom
+    // The outcome is overdue once the planned finish time has passed and nothing is recorded yet.
+    // (The app only knows what the nurse records – not whether she has arrived.)
+    func isOutcomeOverdue(at now: Date) -> Bool {
+        status == .scheduled && now > scheduledEnd
     }
 }

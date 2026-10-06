@@ -10,7 +10,7 @@ struct VisitCardView: View {
 
     //MARK: - PROPERTIES
     let visit: CareVisit
-    var isRunningLate: Bool = false
+    var isOutcomeOverdue: Bool = false
 
     //MARK: - BODY
     var body: some View {
@@ -45,8 +45,8 @@ struct VisitCardView: View {
                         .foregroundColor(.orange)
                 }
 
-                if isRunningLate {
-                    Text("Running late – call the patient ahead")
+                if isOutcomeOverdue {
+                    Text("Outcome overdue – record what happened at this visit")
                         .font(.caption)
                         .bold()
                         .foregroundColor(.red)
@@ -76,7 +76,7 @@ struct VisitCardView_Previews: PreviewProvider {
             scheduledStart: Date(),
             durationMinutes: 45
         )
-        VisitCardView(visit: sampleVisit, isRunningLate: true)
+        VisitCardView(visit: sampleVisit, isOutcomeOverdue: true)
             .previewLayout(.sizeThatFits)
     }
 }

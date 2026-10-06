@@ -2,7 +2,7 @@
 //  HomeVisit
 //
 //  Screen 1 – the nurse's day: visits still to do in driving order,
-//  running-late warnings, and the visits already documented.
+//  outcome-overdue warnings, and the visits already documented.
 
 import SwiftUI
 
@@ -33,7 +33,7 @@ struct TodaysRoundView: View {
                             NavigationLink(destination: VisitDetailView(visit: visit, dependencies: viewModel.dependencies, onVisitChanged: {
                                 viewModel.loadRound()
                             })) {
-                                VisitCardView(visit: visit, isRunningLate: viewModel.isRunningLate(visit))
+                                VisitCardView(visit: visit, isOutcomeOverdue: viewModel.isOutcomeOverdue(visit))
                             }
                         } //: ForEach
                     } //: Section

@@ -2,7 +2,7 @@
 //  HomeVisit
 //
 //  The nurse's plan for one working day: who is still to be seen, who has been seen,
-//  and which visits are running late.
+//  and which visits have an overdue outcome.
 
 import Foundation
 
@@ -10,7 +10,7 @@ struct TodaysRound {
     //MARK: - PROPERTIES
     let outstandingVisits: [CareVisit]     // Still to visit, earliest first
     let closedVisits: [CareVisit]          // Completed or no access
-    let runningLateVisitIDs: [UUID]        // Outstanding visits past the lateness threshold
+    let outcomeOverdueVisitIDs: [UUID]     // Past their planned finish time with no outcome recorded
 
     //MARK: - COMPUTED PROPERTIES
     // The visit the nurse should drive to next
@@ -28,7 +28,7 @@ struct TodaysRound {
     }
 
     //MARK: - FUNCTION
-    func isRunningLate(_ visit: CareVisit) -> Bool {
-        runningLateVisitIDs.contains(visit.id)
+    func isOutcomeOverdue(_ visit: CareVisit) -> Bool {
+        outcomeOverdueVisitIDs.contains(visit.id)
     }
 }

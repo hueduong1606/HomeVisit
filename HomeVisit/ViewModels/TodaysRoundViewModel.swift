@@ -54,7 +54,7 @@ class TodaysRoundViewModel: ObservableObject {
         }
     }
 
-    func isRunningLate(_ visit: CareVisit) -> Bool {
-        round?.isRunningLate(visit) ?? false
+    func isOutcomeOverdue(_ visit: CareVisit) -> Bool {
+        round?.isOutcomeOverdue(visit) ?? false
     }
 }
