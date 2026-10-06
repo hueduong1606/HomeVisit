@@ -12,6 +12,7 @@ enum AdmitPatientError: LocalizedError, Equatable {
     case homeAddressIncomplete
     case patientAlreadyOnCaseload(name: String)
     case caseloadCouldNotBeSaved
+    case referralNotCleared(name: String)
 
     // What went wrong + what the nurse can do next
     var errorDescription: String? {
@@ -24,6 +25,8 @@ enum AdmitPatientError: LocalizedError, Equatable {
             return "\(name) is already on your caseload at this address. Book a visit for them from Today's Round instead."
         case .caseloadCouldNotBeSaved:
             return "The patient couldn't be added to your caseload. Nothing was changed – please try again."
+        case .referralNotCleared(let name):
+            return "\(name) is now on your caseload, but the referral is still in Referrals waiting. Don't admit it again – reopen HomeVisit and check the App Group is set up."
         }
     }
 }
@@ -87,7 +90,11 @@ struct AdmitPatientToCaseloadUseCase {
 
         // Rule 4: a shared referral leaves the inbox only once the patient is safely admitted
         if let referralID = referralID {
-            referralInbox.removeReferral(id: referralID)
+            do {
+                try referralInbox.removeReferral(id: referralID)
+            } catch {
+                throw AdmitPatientError.referralNotCleared(name: trimmedName)
+            }
         }
 
         return patient

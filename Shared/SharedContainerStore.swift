@@ -3,6 +3,10 @@
 //
 //  Reads and writes the JSON files in the App Group container.
 //  Each extension runs in its own process, so these files are how they talk to the app.
+//  - Files are replaced atomically, so a reader never sees a half-written file.
+//  - The referral inbox is read and changed inside an NSFileCoordinator block, so the
+//    share extension and the app never overwrite each other's changes.
+//  - A file that cannot be read throws an error; it is never treated as an empty inbox.
 
 import Foundation
 
@@ -10,50 +14,90 @@ enum SharedContainerStore {
 
     //MARK: - TODAY'S ROUND (app -> widget)
 
-    // Called by the app after every change to the round
-    static func saveRoundSnapshot(_ snapshot: RoundSnapshot) {
-        do {
-            let data = try JSONEncoder().encode(snapshot)
-            try data.write(to: AppGroup.todaysRoundSnapshotURL)
-        } catch {
-            print("Could not publish today's round to the widget: \(error.localizedDescription)")
-        }
+    // Called by the app after every successful change to the round
+    static func saveRoundSnapshot(_ snapshot: RoundSnapshot) throws {
+        let data = try JSONEncoder().encode(snapshot)
+        try data.write(to: AppGroup.todaysRoundSnapshotURL(), options: .atomic)
     }
 
-    // Called by the widget
+    // Called by the widget – nil means the app has not published a round yet
     static func loadRoundSnapshot() -> RoundSnapshot? {
-        guard let data = try? Data(contentsOf: AppGroup.todaysRoundSnapshotURL) else {
-            return nil // The app has not published a round yet
+        guard let url = try? AppGroup.todaysRoundSnapshotURL(),
+              let data = try? Data(contentsOf: url) else {
+            return nil
         }
         return try? JSONDecoder().decode(RoundSnapshot.self, from: data)
     }
 
     //MARK: - REFERRAL INBOX (share extension -> app)
 
-    static func loadReferrals() -> [PatientReferral] {
-        guard let data = try? Data(contentsOf: AppGroup.referralInboxURL) else {
-            return [] // No referral has been shared yet
+    // Oldest referral first. Throws if the inbox exists but cannot be read.
+    static func loadReferrals() throws -> [PatientReferral] {
+        let url = try AppGroup.referralInboxURL()
+        var coordinatorError: NSError?
+        var readError: Error?
+        var referrals: [PatientReferral] = []
+
+        NSFileCoordinator().coordinate(readingItemAt: url, options: [], error: &coordinatorError) { coordinatedURL in
+            do {
+                referrals = try SharedContainerStore.readReferrals(at: coordinatedURL)
+            } catch {
+                readError = error
+            }
         }
-        let referrals = (try? JSONDecoder().decode([PatientReferral].self, from: data)) ?? []
-        return referrals.sorted { $0.receivedAt < $1.receivedAt } // Oldest referral first
+
+        if let coordinatorError = coordinatorError { throw coordinatorError }
+        if let readError = readError { throw readError }
+        return referrals.sorted { $0.receivedAt < $1.receivedAt }
     }
 
     // Called by the share extension when the nurse taps "Save Referral"
     static func appendReferral(_ referral: PatientReferral) throws {
-        var referrals = loadReferrals()
-        referrals.append(referral)
-        let data = try JSONEncoder().encode(referrals)
-        try data.write(to: AppGroup.referralInboxURL)
+        try updateReferrals { referrals in
+            referrals + [referral]
+        }
     }
 
     // Called by the app once the patient has been admitted
-    static func removeReferral(id: UUID) {
-        let remainingReferrals = loadReferrals().filter { $0.id != id }
+    static func removeReferral(id: UUID) throws {
+        try updateReferrals { referrals in
+            referrals.filter { $0.id != id }
+        }
+    }
+
+    //MARK: - PRIVATE
+
+    // Read -> change -> write the inbox as one coordinated step
+    private static func updateReferrals(_ change: ([PatientReferral]) -> [PatientReferral]) throws {
+        let url = try AppGroup.referralInboxURL()
+        var coordinatorError: NSError?
+        var updateError: Error?
+
+        NSFileCoordinator().coordinate(writingItemAt: url, options: .forMerging, error: &coordinatorError) { coordinatedURL in
+            do {
+                // If the current file can't be read, stop here – never overwrite it with an empty inbox
+                let currentReferrals = try SharedContainerStore.readReferrals(at: coordinatedURL)
+                let data = try JSONEncoder().encode(change(currentReferrals))
+                try data.write(to: coordinatedURL, options: .atomic)
+            } catch {
+                updateError = error
+            }
+        }
+
+        if let coordinatorError = coordinatorError { throw coordinatorError }
+        if let updateError = updateError { throw updateError }
+    }
+
+    // No file yet = empty inbox. A file that exists but can't be decoded = error.
+    private static func readReferrals(at url: URL) throws -> [PatientReferral] {
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            return []
+        }
         do {
-            let data = try JSONEncoder().encode(remainingReferrals)
-            try data.write(to: AppGroup.referralInboxURL)
+            let data = try Data(contentsOf: url)
+            return try JSONDecoder().decode([PatientReferral].self, from: data)
         } catch {
-            print("Referral could not be removed: \(error.localizedDescription)")
+            throw AppGroupError.sharedFileUnreadable
         }
     }
 }
