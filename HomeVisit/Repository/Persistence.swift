@@ -50,9 +50,12 @@ struct PersistenceController {
         if inMemory {
             // Configure in-memory store
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
-        } else {
+        } else if let sharedStoreURL = AppGroup.caseloadStoreURL {
             // Keep the caseload in the App Group container
-            container.persistentStoreDescriptions.first!.url = AppGroup.caseloadStoreURL
+            container.persistentStoreDescriptions.first!.url = sharedStoreURL
+        } else {
+            // App Group missing: Core Data keeps its default location so the caseload still works
+            print("App Group unavailable – caseload saved in the app's own folder.")
         }
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             // Print the error instead of crashing the app

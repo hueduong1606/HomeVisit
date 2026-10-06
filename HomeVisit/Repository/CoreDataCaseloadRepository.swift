@@ -38,7 +38,7 @@ class CoreDataCaseloadRepository: CaseloadRepository {
         patientRecord.homeAddress = patient.homeAddress
         patientRecord.clinicalAlert = patient.clinicalAlert
         patientRecord.referralNote = patient.referralNote
-        try context.save()
+        try saveContext()
     }
 
     //MARK: - VISITS
@@ -50,8 +50,7 @@ class CoreDataCaseloadRepository: CaseloadRepository {
 
     // Every visit booked on a calendar day, whatever its status
     func fetchVisits(scheduledOn day: Date) throws -> [CareVisit] {
-        let startOfDay = Calendar.current.startOfDay(for: day)
-        let startOfNextDay = startOfDay.addingTimeInterval(24 * 60 * 60)
+        let (startOfDay, startOfNextDay) = dayBoundaries(for: day)
 
         let fetchRequest: NSFetchRequest<CareVisitRecord> = CareVisitRecord.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "scheduledStart >= %@ AND scheduledStart < %@", startOfDay as NSDate, startOfNextDay as NSDate)
@@ -61,8 +60,7 @@ class CoreDataCaseloadRepository: CaseloadRepository {
 
     // Domain query: "fetch all visits scheduled for today that the nurse has not documented yet"
     func fetchOutstandingVisits(scheduledOn day: Date) throws -> [CareVisit] {
-        let startOfDay = Calendar.current.startOfDay(for: day)
-        let startOfNextDay = startOfDay.addingTimeInterval(24 * 60 * 60)
+        let (startOfDay, startOfNextDay) = dayBoundaries(for: day)
 
         let fetchRequest: NSFetchRequest<CareVisitRecord> = CareVisitRecord.fetchRequest()
         fetchRequest.predicate = NSPredicate(
@@ -88,10 +86,29 @@ class CoreDataCaseloadRepository: CaseloadRepository {
         visitRecord.statusRaw = visit.status.rawValue
         visitRecord.outcomeNote = visit.outcomeNote
         visitRecord.patient = patientRecord
-        try context.save()
+        try saveContext()
     }
 
     //MARK: - PRIVATE HELPERS
+
+    // Saves the context. If Core Data rejects the save, the unsaved changes are
+    // undone so the store stays consistent, and the error is passed to the Use Case.
+    private func saveContext() throws {
+        do {
+            try context.save()
+        } catch {
+            context.rollback()
+            throw error
+        }
+    }
+
+    // Midnight-to-midnight range for a calendar day (correct on daylight-saving days)
+    private func dayBoundaries(for day: Date) -> (Date, Date) {
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: day)
+        let startOfNextDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+        return (startOfDay, startOfNextDay)
+    }
 
     private func findPatientRecord(id: UUID) throws -> PatientRecord? {
         let fetchRequest: NSFetchRequest<PatientRecord> = PatientRecord.fetchRequest()
