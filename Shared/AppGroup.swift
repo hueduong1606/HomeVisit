@@ -8,17 +8,18 @@ import Foundation
 
 enum AppGroup {
     //MARK: - PROPERTIES
-    // ⚠️ Must match the App Group in every target's .entitlements file (see README)
-    static let identifier = "group.com.student.HomeVisit"
+    // ⚠️ Must match the App Group in Config/HomeVisit.entitlements,
+    //    Config/NextVisitWidget.entitlements and Config/ReferralShareExtension.entitlements
+    static let identifier = "group.com.heather.HomeVisit"
 
-    // Folder shared by the app and all extensions
+    // Folder shared by the app and the extensions
     static var containerURL: URL {
         if let sharedURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier) {
             return sharedURL
         }
-        // Fallback keeps the app running if the App Group capability is not set up yet.
+        // Fallback keeps the app running if the App Group is not set up yet.
         // The widget and share extension will NOT see this data until the App Group is configured.
-        print("⚠️ App Group '\(identifier)' is not available. Check Signing & Capabilities for every target.")
+        print("App Group '\(identifier)' is not available. Check Signing & Capabilities.")
         return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     }
 
@@ -28,9 +29,9 @@ enum AppGroup {
         containerURL.appendingPathComponent("HomeVisit.sqlite")
     }
 
-    // Snapshot of today's round written by the app, read by the widget
+    // Today's round written by the app, read by the widget
     static var todaysRoundSnapshotURL: URL {
-        containerURL.appendingPathComponent("TodaysRoundSnapshot.json")
+        containerURL.appendingPathComponent("TodaysRound.json")
     }
 
     // Referrals written by the share extension, read by the app
