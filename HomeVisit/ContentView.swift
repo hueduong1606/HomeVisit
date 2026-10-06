@@ -13,6 +13,9 @@ struct ContentView: View {
     @StateObject var caseloadViewModel: CaseloadViewModel
     let dependencies: AppDependencies
 
+    // Tells us when the nurse comes back to the app (e.g. after sharing a referral)
+    @Environment(\.scenePhase) var scenePhase
+
     //MARK: - INITIALIZER
     init(dependencies: AppDependencies = .live) {
         self.dependencies = dependencies
@@ -36,8 +39,21 @@ struct ContentView: View {
                 }
         } //: TabView
         .onAppear {
-            VisitReminderScheduler.requestPermission()  // Ask once for permission to send visit reminders
-            dependencies.roundSync.roundDidChange()      // Give the widget today's round as soon as the app opens
+            // Ask once for permission to send visit reminders, and explain if they are off
+            VisitReminderScheduler.requestPermission { message in
+                if let message = message {
+                    roundViewModel.errorMessage = message
+                }
+                dependencies.roundSync.roundDidChange()
+            }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            // Back in the app: refresh the round, the caseload, new referrals and the widget
+            if newPhase == .active {
+                roundViewModel.loadRound()
+                caseloadViewModel.loadCaseload()
+                dependencies.roundSync.roundDidChange()
+            }
         }
     }
 }

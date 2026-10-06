@@ -70,8 +70,11 @@ struct VisitDetailView: View {
             if !visit.status.isClosed {
                 Section(header: Text("Visit reminder")) {
                     Button("Preview Visit Reminder") {
-                        VisitReminderScheduler.sendPreviewReminder(for: visit)
-                        reminderMessage = "Reminder arriving in 5 seconds. Lock the screen or go to the Home Screen to see it."
+                        reminderMessage = "Scheduling reminder…"
+                        // The message only says "scheduled" once iOS confirms it
+                        VisitReminderScheduler.sendPreviewReminder(for: visit) { result in
+                            reminderMessage = result
+                        }
                     }
                     if !reminderMessage.isEmpty {
                         Text(reminderMessage)
