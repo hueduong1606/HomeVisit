@@ -1,11 +1,11 @@
 //  NextVisitWidget.swift
 //  NextVisitWidget (WidgetKit extension)
 //
-//  User scenario: between homes the nurse needs the next patient's time and
-//  address at a glance – on the Lock Screen while the phone sits in the car
-//  cradle, or on the Home Screen – without opening the app.
+//  User scenario: between homes, the nurse needs the next visit time and address
+//  at a glance – on the Lock Screen while the phone sits in the car cradle,
+//  or on the Home Screen – without opening the app.
 //
-//  Data source: RoundSnapshot JSON in the App Group container, written by the app
+//  Data source: TodaysRound.json in the App Group container, written by the app
 //  after every change to the round (WidgetAndReminderRoundSync).
 
 import WidgetKit
@@ -16,46 +16,102 @@ struct NextVisitEntry: TimelineEntry {
     let date: Date
     let snapshot: RoundSnapshot?
 
-    //MARK: - COMPUTED PROPERTIES
     // Only trust a snapshot that belongs to today
     var todaysSnapshot: RoundSnapshot? {
         guard let snapshot = snapshot, snapshot.isForToday(now: date) else { return nil }
         return snapshot
-    }
-
-    var nextVisit: RoundSnapshotVisit? {
-        todaysSnapshot?.nextVisit
     }
 }
 
 // MARK: - NextVisitProvider
 struct NextVisitProvider: TimelineProvider {
 
-    // Shown while the widget is loading for the first time
+    // Shown while the widget loads for the first time
     func placeholder(in context: Context) -> NextVisitEntry {
-        NextVisitEntry(date: Date(), snapshot: .sample)
+        NextVisitEntry(date: Date(), snapshot: RoundSnapshot.sample)
     }
 
     // Shown in the widget gallery
     func getSnapshot(in context: Context, completion: @escaping (NextVisitEntry) -> Void) {
         let savedSnapshot = SharedContainerStore.loadRoundSnapshot()
-        let snapshot: RoundSnapshot? = context.isPreview ? (savedSnapshot ?? RoundSnapshot.sample) : savedSnapshot
-        completion(NextVisitEntry(date: Date(), snapshot: snapshot))
+        completion(NextVisitEntry(date: Date(), snapshot: savedSnapshot ?? RoundSnapshot.sample))
     }
 
-    // Real timeline: read the latest round from the App Group container
+    // Reads the latest round from the App Group container.
+    // The app reloads the widget after every change; as a safety net it also refreshes every 30 minutes.
     func getTimeline(in context: Context, completion: @escaping (Timeline<NextVisitEntry>) -> Void) {
-        let now = Date()
-        let entry = NextVisitEntry(date: now, snapshot: SharedContainerStore.loadRoundSnapshot())
-
-        // The app reloads the widget after every change; as a safety net refresh
-        // every 30 minutes and just after midnight so yesterday's round never shows.
-        let calendar = Calendar.current
-        let justAfterMidnight = calendar.date(byAdding: .minute, value: 1, to: calendar.startOfDay(for: now).addingTimeInterval(24 * 60 * 60)) ?? now
-        let inThirtyMinutes = now.addingTimeInterval(30 * 60)
-        let nextRefresh = min(justAfterMidnight, inThirtyMinutes)
-
+        let entry = NextVisitEntry(date: Date(), snapshot: SharedContainerStore.loadRoundSnapshot())
+        let nextRefresh = Date().addingTimeInterval(30 * 60)
         completion(Timeline(entries: [entry], policy: .after(nextRefresh)))
+    }
+}
+
+// MARK: - NextVisitWidgetView
+struct NextVisitWidgetView: View {
+
+    //MARK: - PROPERTIES
+    let entry: NextVisitEntry
+    @Environment(\.widgetFamily) var family
+
+    //MARK: - BODY
+    var body: some View {
+        if let snapshot = entry.todaysSnapshot, let nextVisit = snapshot.nextVisit {
+            // There is a visit still to do
+            if family == .accessoryRectangular {
+                // Lock Screen
+                VStack(alignment: .leading) {
+                    Text(nextVisit.scheduledStart, style: .time)
+                        .font(.headline)
+                    Text(nextVisit.patientName)
+                        .font(.caption)
+                    Text(nextVisit.homeAddress)
+                        .font(.caption)
+                }
+            } else {
+                // Home Screen
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Next visit")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text(nextVisit.scheduledStart, style: .time)
+                        .font(.title2)
+                        .bold()
+                    Text(nextVisit.patientName)
+                        .font(.subheadline)
+                        .bold()
+                    Text(nextVisit.homeAddress)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    if !nextVisit.clinicalAlert.isEmpty {
+                        Text("⚠️ \(nextVisit.clinicalAlert)")
+                            .font(.caption2)
+                            .foregroundColor(.orange)
+                    }
+                }
+            }
+        } else {
+            // Never a bare "No data" – tell the nurse what the round looks like
+            VStack(alignment: .leading, spacing: 4) {
+                Text(statusHeadline)
+                    .font(.headline)
+                Text(statusDetail)
+                    .font(.caption)
+            }
+        }
+    }
+
+    //MARK: - EMPTY STATES
+    var statusHeadline: String {
+        guard let snapshot = entry.todaysSnapshot else { return "Open HomeVisit" }
+        return snapshot.totalVisitCount == 0 ? "No visits today" : "Round complete"
+    }
+
+    var statusDetail: String {
+        guard let snapshot = entry.todaysSnapshot else { return "Open the app to load today's round." }
+        if snapshot.totalVisitCount == 0 {
+            return "Add a visit in HomeVisit to see it here."
+        }
+        return "All \(snapshot.totalVisitCount) visits documented."
     }
 }
 
@@ -69,12 +125,16 @@ struct NextVisitWidget: Widget {
                 .containerBackground(.fill.tertiary, for: .widget)
         }
         .configurationDisplayName("Next Home Visit")
-        .description("Your next patient, visit time and address – without unlocking HomeVisit.")
-        .supportedFamilies([
-            .systemSmall,            // Home Screen
-            .systemMedium,           // Home Screen
-            .accessoryRectangular,   // Lock Screen
-            .accessoryInline         // Lock Screen (above the clock)
-        ])
+        .description("Your next patient, visit time and address.")
+        .supportedFamilies([.systemSmall, .accessoryRectangular]) // Home Screen + Lock Screen
+    }
+}
+
+//MARK: - PREVIEW
+struct NextVisitWidget_Previews: PreviewProvider {
+    static var previews: some View {
+        NextVisitWidgetView(entry: NextVisitEntry(date: Date(), snapshot: RoundSnapshot.sample))
+            .containerBackground(.fill.tertiary, for: .widget)
+            .previewContext(WidgetPreviewContext(family: .systemSmall))
     }
 }
