@@ -29,12 +29,19 @@ struct PlanTodaysRoundUseCase {
     /// Business rules:
     /// 1. visits still to do are listed in time order – the order the nurse drives the round
     /// 2. a visit still not documented after its planned finish time is flagged "Outcome overdue"
+    /// 3. visits booked for the coming days (planning window) are listed separately, earliest first
     func execute(on day: Date = Date(), now: Date = Date()) throws(PlanTodaysRoundError) -> TodaysRound {
+        let calendar = Calendar.current
+        let startOfNextDay = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: day))!
+        let endOfPlanningWindow = calendar.date(byAdding: .day, value: ScheduleHomeVisitUseCase.planningWindowDays + 1, to: calendar.startOfDay(for: day))!
+
         let outstandingVisits: [CareVisit]
         let everyVisitToday: [CareVisit]
+        let comingUpVisits: [CareVisit]
         do {
             outstandingVisits = try repository.fetchOutstandingVisits(scheduledOn: day)
             everyVisitToday = try repository.fetchVisits(scheduledOn: day)
+            comingUpVisits = try repository.fetchOutstandingVisits(from: startOfNextDay, before: endOfPlanningWindow)
         } catch {
             throw PlanTodaysRoundError.roundUnavailable
         }
@@ -50,7 +57,8 @@ struct PlanTodaysRoundUseCase {
         return TodaysRound(
             outstandingVisits: orderedVisits,
             closedVisits: everyVisitToday.filter { $0.status.isClosed },
-            outcomeOverdueVisitIDs: outcomeOverdueVisitIDs
+            outcomeOverdueVisitIDs: outcomeOverdueVisitIDs,
+            comingUpVisits: comingUpVisits.sorted { $0.scheduledStart < $1.scheduledStart }
         )
     }
 }

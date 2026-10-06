@@ -4,7 +4,7 @@
 //  Keeps everything OUTSIDE the app in step with today's round:
 //  1. saves a RoundSnapshot into the App Group for the NextVisitWidget
 //  2. asks WidgetKit to reload the widget
-//  3. reschedules the visit reminder notifications
+//  3. reschedules the visit reminder notifications (today and the coming days)
 //  Use Cases only call this after a successful save.
 
 import Foundation
@@ -55,7 +55,15 @@ class WidgetAndReminderRoundSync: RoundSyncing {
             print("Widget not updated: \(error.localizedDescription)")
         }
 
-        // 3. One reminder before each visit still to do
-        VisitReminderScheduler.rescheduleReminders(for: outstandingVisits)
+        // 3. One reminder before each visit still to do – today and the planned coming days.
+        //    If they can't be read, the reminders already scheduled are kept.
+        let calendar = Calendar.current
+        let endOfPlanningWindow = calendar.date(byAdding: .day, value: ScheduleHomeVisitUseCase.planningWindowDays + 1, to: calendar.startOfDay(for: Date()))!
+        do {
+            let visitsToRemind = try repository.fetchOutstandingVisits(from: Date(), before: endOfPlanningWindow)
+            VisitReminderScheduler.rescheduleReminders(for: visitsToRemind)
+        } catch {
+            print("Upcoming visits could not be loaded – reminders left unchanged: \(error)")
+        }
     }
 }

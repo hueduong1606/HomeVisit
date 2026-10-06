@@ -56,7 +56,8 @@ enum VisitReminderScheduler {
             }
             center.removeAllPendingNotificationRequests()
 
-            for visit in visits {
+            // iOS keeps at most 64 pending notifications, so only the earliest 60 visits get one
+            for visit in visits.prefix(60) {
                 let reminderDate = visit.scheduledStart.addingTimeInterval(TimeInterval(-VisitReminderScheduler.reminderLeadTimeMinutes * 60))
                 let secondsUntilReminder = reminderDate.timeIntervalSinceNow
                 if secondsUntilReminder > 0 {
