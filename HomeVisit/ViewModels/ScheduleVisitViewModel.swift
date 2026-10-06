@@ -40,7 +40,7 @@ class ScheduleVisitViewModel: ObservableObject {
         do {
             patients = try repository.fetchPatients()
         } catch {
-            errorMessage = "Your patients could not be loaded. Please try again."
+            errorMessage = "Your caseload couldn't be opened, so no patient can be chosen. Your patients are still saved – close Add Visit to Round and open it again."
         }
     }
 

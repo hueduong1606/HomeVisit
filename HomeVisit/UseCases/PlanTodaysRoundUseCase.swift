@@ -7,8 +7,10 @@
 import Foundation
 
 // MARK: - PlanTodaysRoundError
+/// Encountered by: the community nurse opening Today's Round before or between home visits.
+/// Recovery: reopen the app, or get today's visit list from the team leader so no patient is missed.
 enum PlanTodaysRoundError: LocalizedError, Equatable {
-    case roundUnavailable
+    case roundUnavailable   // Today's visits could not be read from the device
 
     // What went wrong + what the nurse can do next
     var errorDescription: String? {

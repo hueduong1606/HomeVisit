@@ -6,6 +6,8 @@
 import Foundation
 
 // MARK: - VisitStatus
+/// Where a home visit is in its lifecycle.
+/// Business Rule: once a visit is closed (completed or no access), its outcome is part of the clinical record.
 enum VisitStatus: String {
     case scheduled = "Scheduled"   // On the round, not yet documented
     case completed = "Completed"   // Care delivered and clinical note written

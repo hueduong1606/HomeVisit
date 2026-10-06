@@ -7,11 +7,13 @@
 import Foundation
 
 // MARK: - RecordVisitOutcomeError
+/// Encountered by: the community nurse documenting a visit at, or just after leaving, the patient's home.
+/// Recovery: the clinical note is never lost – it stays on screen until the outcome is safely saved.
 enum RecordVisitOutcomeError: LocalizedError, Equatable {
-    case visitNoLongerOnRound
-    case outcomeAlreadyRecorded
-    case clinicalNoteTooShort(minimumCharacters: Int)
-    case outcomeCouldNotBeSaved
+    case visitNoLongerOnRound                           // Visit was removed from the round
+    case outcomeAlreadyRecorded                         // Clinical record is never overwritten
+    case clinicalNoteTooShort(minimumCharacters: Int)   // Note too short to be a meaningful clinical record
+    case outcomeCouldNotBeSaved                         // Device could not store the outcome – nothing changed
 
     // What went wrong + what the nurse can do next
     var errorDescription: String? {

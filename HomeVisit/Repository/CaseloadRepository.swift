@@ -28,6 +28,8 @@ protocol CaseloadRepository {
 }
 
 // MARK: - CaseloadRepositoryError
+/// Never shown to the nurse: every Use Case catches repository errors and turns them
+/// into its own domain error (e.g. ScheduleHomeVisitError.roundCouldNotBeSaved).
 enum CaseloadRepositoryError: Error {
     case patientRecordMissing
 }

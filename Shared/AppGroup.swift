@@ -26,28 +26,35 @@ enum AppGroup {
 
     // Today's round written by the app, read by the widget
     static func todaysRoundSnapshotURL() throws -> URL {
-        guard let containerURL = containerURL else { throw AppGroupError.sharedContainerUnavailable }
+        guard let containerURL = containerURL else { throw ReferralSharingError.sharingUnavailableOnThisDevice }
         return containerURL.appendingPathComponent("TodaysRound.json")
     }
 
     // Referrals written by the share extension, read by the app
     static func referralInboxURL() throws -> URL {
-        guard let containerURL = containerURL else { throw AppGroupError.sharedContainerUnavailable }
+        guard let containerURL = containerURL else { throw ReferralSharingError.sharingUnavailableOnThisDevice }
         return containerURL.appendingPathComponent("ReferralInbox.json")
     }
 }
 
-// MARK: - AppGroupError
-enum AppGroupError: LocalizedError {
-    case sharedContainerUnavailable
-    case sharedFileUnreadable
+// MARK: - ReferralSharingError
+/// Encountered by: the community nurse when she shares a referral into HomeVisit from
+/// another app (share sheet), or opens the Caseload tab to see "Referrals waiting".
+/// Each message says what happened to the referral and how she can carry on.
+enum ReferralSharingError: LocalizedError, Equatable {
+    case sharingUnavailableOnThisDevice   // The shared space between the app and its extensions is missing
+    case referralsWaitingUnreadable       // The referrals waiting list exists but cannot be opened
+    case referralsWaitingNotUpdated       // A referral could not be added to or removed from the list
 
+    // What went wrong + what the nurse can do next
     var errorDescription: String? {
         switch self {
-        case .sharedContainerUnavailable:
-            return "HomeVisit can't reach its shared storage, so referrals and the widget can't be updated. In Xcode, turn on the App Group group.com.heather.HomeVisit for the app and its extensions."
-        case .sharedFileUnreadable:
-            return "Shared referrals could not be read. Nothing was deleted – please try again."
+        case .sharingUnavailableOnThisDevice:
+            return "Referrals can't be passed into HomeVisit on this iPhone right now. Your patients and visits are still saved – admit the patient by hand from the Caseload tab, and ask IT support to reinstall HomeVisit."
+        case .referralsWaitingUnreadable:
+            return "Your referrals waiting couldn't be opened. No referral has been deleted – close and reopen HomeVisit, or admit the patient by hand from the referral text."
+        case .referralsWaitingNotUpdated:
+            return "The referral couldn't be saved to your referrals waiting, so nothing was changed. Your referral text is still here – tap Save Referral to HomeVisit again in a moment."
         }
     }
 }

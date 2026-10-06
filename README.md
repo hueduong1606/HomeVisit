@@ -145,6 +145,18 @@ The app uses domain-specific errors instead of generic failure messages. Each me
 
 *"This visit overlaps your visit with Arthur Nguyen. Pick a start time after that visit finishes."*
 
+Each error enum was designed by answering three questions: who meets this error in the real workflow, what they need to be told, and what they can do next.
+
+| Error enum | Who encounters it | What the system communicates | What they can do next |
+|---|---|---|---|
+| `PlanTodaysRoundError` | The nurse opening Today's Round before or between visits | Today's round couldn't be loaded | Reopen HomeVisit, or call the team leader for today's visit list |
+| `ScheduleHomeVisitError` | The nurse booking a visit for today or planning ahead | Which booking rule was broken: past time, more than 14 days ahead, past midnight, unsafe length, or a clash with a named patient | Change the time, date or duration as the message says; admit the patient first if they are not on the caseload |
+| `RecordVisitOutcomeError` | The nurse documenting a visit at or after leaving the home | The note is too short, the outcome is already recorded, or it couldn't be saved | Write a fuller note; add late entries to the main clinical record; try saving again – the note stays on screen |
+| `AdmitPatientError` | The nurse admitting a patient by hand or from a referral | The name or street number is missing, the patient is already on the caseload, or the referral is still listed | Check the referral or call the referrer; book a visit instead of admitting twice |
+| `ReferralSharingError` | The nurse sharing a referral from another app, or viewing Referrals waiting | The referral couldn't be passed in, opened or saved, and nothing was deleted | Tap Save again, reopen HomeVisit, or admit the patient by hand from the referral text |
+
+Technical details (such as file or database errors) are only written to the developer log. `CaseloadRepositoryError` is never shown to the nurse – each Use Case turns it into its own domain error.
+
 The system considers what happens at the patient's home as well as the digital record. For example, a visit that has passed its planned finish time with nothing recorded is flagged as *Outcome overdue*, so it is not forgotten.
 
 If the round cannot be loaded, the nurse sees a message instead of an empty list. If a save fails, what she typed stays on screen so she can try again. The widget keeps its previous data rather than showing a wrong round, and reminders only say *"Reminder scheduled"* after iOS confirms it.
@@ -176,12 +188,12 @@ The six tests cover:
 
 | Test | Use Case | Type |
 |---|---|---|
-| `planningTomorrowsVisitTheDayBefore_addsItToTheRoundAndRefreshesWidget` | ScheduleHomeVisit | Happy path |
-| `visitOverlappingAnotherVisit_isRejectedAndNamesTheClashingPatient` | ScheduleHomeVisit | Domain error |
-| `clinicalNoteWithNineCharacters_isRejected_butTenCharacters_isAccepted` | RecordVisitOutcome | Boundary |
-| `visitAlreadyDocumented_cannotBeDocumentedAgain` | RecordVisitOutcome | Domain error |
-| `admittingPatientFromSharedReferral_addsToCaseloadAndClearsTheReferral` | AdmitPatientToCaseload | Happy path |
-| `outcomeIsOverdueOnlyAfterThePlannedFinishTime_andRoundIsInTimeOrder` | PlanTodaysRound | Boundary |
+| `scheduleHomeVisit_addsVisitToTomorrowsRound_whenPlannedTheDayBefore` | ScheduleHomeVisit | Happy path |
+| `scheduleHomeVisit_fails_whenVisitOverlapsAnotherPatientsVisit` | ScheduleHomeVisit | Domain error |
+| `recordVisitOutcome_fails_whenClinicalNoteIsNineCharacters_andSucceedsAtTen` | RecordVisitOutcome | Boundary |
+| `recordVisitOutcome_fails_whenOutcomeIsAlreadyRecorded` | RecordVisitOutcome | Domain error |
+| `admitPatientToCaseload_clearsReferral_whenAdmittedFromSharedReferral` | AdmitPatientToCaseload | Happy path |
+| `planTodaysRound_flagsOutcomeOverdue_onlyAfterPlannedFinishTime` | PlanTodaysRound | Boundary |
 
 A mock repository (`MockCaseloadRepository`) is used during unit testing so that the business logic can be tested without depending on Core Data or the App Group.
 

@@ -31,7 +31,7 @@ enum SharedContainerStore {
 
     //MARK: - REFERRAL INBOX (share extension -> app)
 
-    // Oldest referral first. Throws if the inbox exists but cannot be read.
+    // Oldest referral first. Throws ReferralSharingError if the inbox exists but cannot be read.
     static func loadReferrals() throws -> [PatientReferral] {
         let url = try AppGroup.referralInboxURL()
         var coordinatorError: NSError?
@@ -46,8 +46,9 @@ enum SharedContainerStore {
             }
         }
 
-        if let coordinatorError = coordinatorError { throw coordinatorError }
-        if let readError = readError { throw readError }
+        // Only domain errors leave this file – never a technical file-system message
+        if let sharingError = readError as? ReferralSharingError { throw sharingError }
+        if coordinatorError != nil || readError != nil { throw ReferralSharingError.referralsWaitingUnreadable }
         return referrals.sorted { $0.receivedAt < $1.receivedAt }
     }
 
@@ -84,8 +85,9 @@ enum SharedContainerStore {
             }
         }
 
-        if let coordinatorError = coordinatorError { throw coordinatorError }
-        if let updateError = updateError { throw updateError }
+        // Only domain errors leave this file – never a technical file-system message
+        if let sharingError = updateError as? ReferralSharingError { throw sharingError }
+        if coordinatorError != nil || updateError != nil { throw ReferralSharingError.referralsWaitingNotUpdated }
     }
 
     // No file yet = empty inbox. A file that exists but can't be decoded = error.
@@ -97,7 +99,7 @@ enum SharedContainerStore {
             let data = try Data(contentsOf: url)
             return try JSONDecoder().decode([PatientReferral].self, from: data)
         } catch {
-            throw AppGroupError.sharedFileUnreadable
+            throw ReferralSharingError.referralsWaitingUnreadable
         }
     }
 }

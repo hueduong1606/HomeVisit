@@ -70,8 +70,9 @@ class ShareViewController: UIViewController {
             try SharedContainerStore.appendReferral(referral)
             extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
         } catch {
-            // e.g. App Group not set up, or the inbox file can't be read – nothing is overwritten
-            draft.errorMessage = "The referral couldn't be saved. \(error.localizedDescription)"
+            // ReferralSharingError explains what happened in nursing terms – nothing is overwritten,
+            // and the share sheet stays open so the nurse can try again
+            draft.errorMessage = error.localizedDescription
         }
     }
 

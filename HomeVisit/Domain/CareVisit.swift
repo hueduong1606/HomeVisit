@@ -5,6 +5,10 @@
 
 import Foundation
 
+/// A single home visit booked on a community nurse's round.
+/// Business Rules:
+/// - Two visits clash when one starts before the other has finished; back-to-back visits do not clash.
+/// - The outcome is overdue once the planned finish time has passed and nothing has been recorded.
 struct CareVisit: Identifiable, Equatable {
     //MARK: - PROPERTIES
     let id: UUID

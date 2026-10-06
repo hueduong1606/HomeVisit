@@ -28,7 +28,7 @@ class CaseloadViewModel: ObservableObject {
         do {
             patients = try dependencies.repository.fetchPatients()
         } catch {
-            errorMessage = "Your patients could not be loaded. Please try again."
+            errorMessage = "Your caseload couldn't be opened. Your patients are still saved – switch to Today's Round and back to Caseload to reload it."
         }
 
         do {

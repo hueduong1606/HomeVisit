@@ -7,12 +7,15 @@
 import Foundation
 
 // MARK: - AdmitPatientError
+/// Encountered by: the community nurse on "Admit Patient", typing a new patient in
+/// or admitting one from a referral shared by a GP or hospital.
+/// Recovery: each message points back to the referral, the referrer, or Today's Round.
 enum AdmitPatientError: LocalizedError, Equatable {
-    case patientNameMissing
-    case homeAddressIncomplete
-    case patientAlreadyOnCaseload(name: String)
-    case caseloadCouldNotBeSaved
-    case referralNotCleared(name: String)
+    case patientNameMissing                         // Nurse would not know who she is visiting
+    case homeAddressIncomplete                      // Nurse could not find the home (no street number)
+    case patientAlreadyOnCaseload(name: String)     // Same person at the same address admitted twice
+    case caseloadCouldNotBeSaved                    // Device could not store the patient – nothing changed
+    case referralNotCleared(name: String)           // Patient admitted, but the referral is still listed
 
     // What went wrong + what the nurse can do next
     var errorDescription: String? {
@@ -24,9 +27,9 @@ enum AdmitPatientError: LocalizedError, Equatable {
         case .patientAlreadyOnCaseload(let name):
             return "\(name) is already on your caseload at this address. Book a visit for them from Today's Round instead."
         case .caseloadCouldNotBeSaved:
-            return "The patient couldn't be added to your caseload. Nothing was changed – please try again."
+            return "The patient couldn't be added to your caseload, so nothing was changed. The details you typed are still here – tap Admit to Caseload again."
         case .referralNotCleared(let name):
-            return "\(name) is now on your caseload, but the referral is still in Referrals waiting. Don't admit it again – reopen HomeVisit and check the App Group is set up."
+            return "\(name) has been admitted and is now under Patients, but their referral is still listed under Referrals waiting. Don't admit them again. If the referral is still listed after you reopen HomeVisit, ask your team leader to clear it."
         }
     }
 }
