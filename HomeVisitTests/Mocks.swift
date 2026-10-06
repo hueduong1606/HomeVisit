@@ -37,6 +37,12 @@ class MockCaseloadRepository: CaseloadRepository {
         try fetchVisits(scheduledOn: day).filter { $0.status == .scheduled }
     }
 
+    func fetchOutstandingVisits(from start: Date, before end: Date) throws -> [CareVisit] {
+        visits
+            .filter { $0.status == .scheduled && $0.scheduledStart >= start && $0.scheduledStart < end }
+            .sorted { $0.scheduledStart < $1.scheduledStart }
+    }
+
     func saveVisit(_ visit: CareVisit) throws {
         visits.removeAll { $0.id == visit.id }
         visits.append(visit)

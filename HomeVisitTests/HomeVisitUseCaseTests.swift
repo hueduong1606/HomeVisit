@@ -20,18 +20,19 @@ struct HomeVisitUseCaseTests {
     //MARK: - SCHEDULE HOME VISIT
 
     // 1. Happy path
-    @Test func bookingVisitForPatientOnCaseload_addsItToTheRoundAndRefreshesWidget() throws {
-        // --- GIVEN --- Margaret is on the caseload, it is 8:00 AM
+    @Test func planningTomorrowsVisitTheDayBefore_addsItToTheRoundAndRefreshesWidget() throws {
+        // --- GIVEN --- Margaret is on the caseload, it is Tuesday 4:00 PM
         repository.patients = [TestData.margaret]
         let scheduleHomeVisit = ScheduleHomeVisitUseCase(repository: repository, roundSync: roundSync)
+        let wednesdayTenAM = Calendar.current.date(byAdding: .day, value: 1, to: TestData.tuesday(hour: 10))!
 
-        // --- WHEN --- the nurse books her for 10:00 AM
+        // --- WHEN --- the nurse plans tomorrow's round: Margaret on Wednesday at 10:00 AM
         let visit = try scheduleHomeVisit.execute(
             patientID: TestData.margaret.id,
             careType: .woundCare,
-            scheduledStart: TestData.tuesday(hour: 10),
+            scheduledStart: wednesdayTenAM,
             durationMinutes: 45,
-            now: TestData.tuesday(hour: 8)
+            now: TestData.tuesday(hour: 16)
         )
 
         // --- THEN ---
