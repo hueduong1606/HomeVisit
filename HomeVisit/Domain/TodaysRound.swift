@@ -6,6 +6,8 @@
 
 import Foundation
 
+/// The community nurse's plan for one working day.
+/// Business Rule: visits still to do are listed in time order – the order the nurse drives the round.
 struct TodaysRound {
     //MARK: - PROPERTIES
     let outstandingVisits: [CareVisit]     // Still to visit, earliest first

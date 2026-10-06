@@ -5,6 +5,7 @@
 
 import Foundation
 
+/// The kind of nursing care delivered during a home visit.
 enum CareType: String, CaseIterable, Identifiable {
     case woundCare = "Wound care"
     case medicationReview = "Medication review"

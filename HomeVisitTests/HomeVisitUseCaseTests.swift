@@ -20,7 +20,7 @@ struct HomeVisitUseCaseTests {
     //MARK: - SCHEDULE HOME VISIT
 
     // 1. Happy path
-    @Test func planningTomorrowsVisitTheDayBefore_addsItToTheRoundAndRefreshesWidget() throws {
+    @Test func scheduleHomeVisit_addsVisitToTomorrowsRound_whenPlannedTheDayBefore() throws {
         // --- GIVEN --- Margaret is on the caseload, it is Tuesday 4:00 PM
         repository.patients = [TestData.margaret]
         let scheduleHomeVisit = ScheduleHomeVisitUseCase(repository: repository, roundSync: roundSync)
@@ -42,7 +42,7 @@ struct HomeVisitUseCaseTests {
     }
 
     // 2. Domain error
-    @Test func visitOverlappingAnotherVisit_isRejectedAndNamesTheClashingPatient() {
+    @Test func scheduleHomeVisit_fails_whenVisitOverlapsAnotherPatientsVisit() {
         // --- GIVEN --- Arthur is booked 10:00–10:45
         repository.patients = [TestData.margaret, TestData.arthur]
         repository.visits = [TestData.visit(for: TestData.arthur, at: TestData.tuesday(hour: 10))]
@@ -64,7 +64,7 @@ struct HomeVisitUseCaseTests {
     //MARK: - RECORD VISIT OUTCOME
 
     // 3. Boundary condition
-    @Test func clinicalNoteWithNineCharacters_isRejected_butTenCharacters_isAccepted() throws {
+    @Test func recordVisitOutcome_fails_whenClinicalNoteIsNineCharacters_andSucceedsAtTen() throws {
         // --- GIVEN --- a visit still to be documented
         let visit = TestData.visit(for: TestData.margaret, at: TestData.tuesday(hour: 9))
         repository.patients = [TestData.margaret]
@@ -82,7 +82,7 @@ struct HomeVisitUseCaseTests {
     }
 
     // 4. Domain error
-    @Test func visitAlreadyDocumented_cannotBeDocumentedAgain() throws {
+    @Test func recordVisitOutcome_fails_whenOutcomeIsAlreadyRecorded() throws {
         // --- GIVEN --- the nurse could not get in and recorded "No access"
         let visit = TestData.visit(for: TestData.margaret, at: TestData.tuesday(hour: 9))
         repository.patients = [TestData.margaret]
@@ -100,7 +100,7 @@ struct HomeVisitUseCaseTests {
     //MARK: - ADMIT PATIENT TO CASELOAD
 
     // 5. Happy path (referral from the Share Extension)
-    @Test func admittingPatientFromSharedReferral_addsToCaseloadAndClearsTheReferral() throws {
+    @Test func admitPatientToCaseload_clearsReferral_whenAdmittedFromSharedReferral() throws {
         // --- GIVEN --- a referral waiting in the inbox
         let referral = PatientReferral(patientName: "Beatrice Collins", referralText: "Post hip replacement – wound review within 48 hours.")
         referralInbox.referrals = [referral]
@@ -122,7 +122,7 @@ struct HomeVisitUseCaseTests {
     //MARK: - PLAN TODAY'S ROUND
 
     // 6. Boundary condition
-    @Test func outcomeIsOverdueOnlyAfterThePlannedFinishTime_andRoundIsInTimeOrder() throws {
+    @Test func planTodaysRound_flagsOutcomeOverdue_onlyAfterPlannedFinishTime() throws {
         // --- GIVEN --- an 11:00 visit added before a 9:00 visit (9:00 + 45 min = planned finish 9:45)
         let elevenAM = TestData.visit(for: TestData.arthur, at: TestData.tuesday(hour: 11))
         let nineAM = TestData.visit(for: TestData.margaret, at: TestData.tuesday(hour: 9))

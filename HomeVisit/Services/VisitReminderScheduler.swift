@@ -34,7 +34,8 @@ enum VisitReminderScheduler {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
             DispatchQueue.main.async {
                 if let error = error {
-                    completion("Visit reminders could not be set up: \(error.localizedDescription)")
+                    print("Reminder permission request failed: \(error)") // technical detail for the developer log only
+                    completion("Visit reminders couldn't be switched on, so you won't get a reminder before each visit. Your round is still saved – turn on Allow Notifications in Settings → Notifications → HomeVisit.")
                 } else if !granted {
                     completion(VisitReminderScheduler.remindersOffMessage)
                 } else {
@@ -89,7 +90,8 @@ enum VisitReminderScheduler {
             center.add(request) { error in
                 DispatchQueue.main.async {
                     if let error = error {
-                        completion("The reminder could not be scheduled: \(error.localizedDescription)")
+                        print("Preview reminder not added: \(error)") // technical detail for the developer log only
+                        completion("The reminder for your visit with \(visit.patientName) couldn't be set. Check notifications are on in Settings → Notifications → HomeVisit, then tap Preview Visit Reminder again.")
                     } else {
                         completion("Reminder scheduled – it arrives in 5 seconds. Go to the Home Screen or lock the screen to see it.")
                     }

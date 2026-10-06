@@ -6,6 +6,8 @@
 
 import Foundation
 
+/// A referral from a GP or hospital that the nurse shared into HomeVisit from another app.
+/// Business Rule: it stays in "Referrals waiting" until the patient has been safely admitted.
 struct PatientReferral: Codable, Identifiable, Equatable {
     //MARK: - PROPERTIES
     let id: UUID

@@ -6,14 +6,17 @@
 import Foundation
 
 // MARK: - ScheduleHomeVisitError
+/// Encountered by: the community nurse on "Add Visit to Round", booking a visit for today
+/// or planning ahead (e.g. tomorrow's round the day before).
+/// Recovery: every message names the rule that was broken and the change that will let the booking through.
 enum ScheduleHomeVisitError: LocalizedError, Equatable {
-    case patientNotOnCaseload
-    case visitTimeInThePast
-    case visitBeyondPlanningWindow(days: Int)
-    case visitRunsPastMidnight
-    case durationOutsideSafeRange(minutes: Int)
-    case clashesWithVisit(patientName: String)
-    case roundCouldNotBeSaved
+    case patientNotOnCaseload                       // Patient was never admitted (or no longer exists)
+    case visitTimeInThePast                         // Start time has already gone
+    case visitBeyondPlanningWindow(days: Int)       // More than 14 days ahead
+    case visitRunsPastMidnight                      // Visit would spill into the next day's round
+    case durationOutsideSafeRange(minutes: Int)     // Shorter than 15 or longer than 180 minutes
+    case clashesWithVisit(patientName: String)      // Nurse would be in two homes at once
+    case roundCouldNotBeSaved                       // Device could not store the booking – nothing changed
 
     // What went wrong + what the nurse can do next
     var errorDescription: String? {
@@ -31,7 +34,7 @@ enum ScheduleHomeVisitError: LocalizedError, Equatable {
         case .clashesWithVisit(let patientName):
             return "This visit overlaps your visit with \(patientName). Pick a start time after that visit finishes."
         case .roundCouldNotBeSaved:
-            return "The visit couldn't be saved to your round. Nothing was changed – please try again."
+            return "The visit couldn't be saved to your round, so nothing was changed. Your booking is still here – tap Add to Round again."
         }
     }
 }
