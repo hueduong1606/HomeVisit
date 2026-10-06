@@ -5,6 +5,7 @@
 //  1. saves a RoundSnapshot into the App Group for the NextVisitWidget
 //  2. asks WidgetKit to reload the widget
 //  3. reschedules the visit reminder notifications
+//  Use Cases only call this after a successful save.
 
 import Foundation
 import WidgetKit
@@ -21,10 +22,17 @@ class WidgetAndReminderRoundSync: RoundSyncing {
 
     //MARK: - FUNCTION
     func roundDidChange() {
-        let todaysVisits = (try? repository.fetchVisits(scheduledOn: Date())) ?? []
+        // If today's round can't be read, keep the widget and reminders the nurse already has
+        let todaysVisits: [CareVisit]
+        do {
+            todaysVisits = try repository.fetchVisits(scheduledOn: Date())
+        } catch {
+            print("Today's round could not be loaded – widget and reminders left unchanged: \(error)")
+            return
+        }
         let outstandingVisits = todaysVisits.filter { $0.status == .scheduled }
 
-        // 1. Save today's round for the widget
+        // 1. Save today's round for the widget, then 2. ask the widget to redraw
         let snapshot = RoundSnapshot(
             roundDate: Date(),
             closedVisitCount: todaysVisits.count - outstandingVisits.count,
@@ -40,10 +48,12 @@ class WidgetAndReminderRoundSync: RoundSyncing {
                 )
             }
         )
-        SharedContainerStore.saveRoundSnapshot(snapshot)
-
-        // 2. Ask the widget to redraw with the new round
-        WidgetCenter.shared.reloadAllTimelines()
+        do {
+            try SharedContainerStore.saveRoundSnapshot(snapshot)
+            WidgetCenter.shared.reloadAllTimelines()
+        } catch {
+            print("Widget not updated: \(error.localizedDescription)")
+        }
 
         // 3. One reminder before each visit still to do
         VisitReminderScheduler.rescheduleReminders(for: outstandingVisits)

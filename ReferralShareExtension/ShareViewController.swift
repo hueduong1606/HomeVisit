@@ -70,7 +70,8 @@ class ShareViewController: UIViewController {
             try SharedContainerStore.appendReferral(referral)
             extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
         } catch {
-            draft.errorMessage = "The referral couldn't be saved. Open HomeVisit once, then share the referral again."
+            // e.g. App Group not set up, or the inbox file can't be read – nothing is overwritten
+            draft.errorMessage = "The referral couldn't be saved. \(error.localizedDescription)"
         }
     }
 

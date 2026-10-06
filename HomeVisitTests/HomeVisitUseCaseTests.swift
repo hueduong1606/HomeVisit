@@ -121,20 +121,20 @@ struct HomeVisitUseCaseTests {
     //MARK: - PLAN TODAY'S ROUND
 
     // 6. Boundary condition
-    @Test func visitIsRunningLateOnlyAfterMoreThanFifteenMinutes_andRoundIsInTimeOrder() throws {
-        // --- GIVEN --- an 11:00 visit added before a 9:00 visit
+    @Test func outcomeIsOverdueOnlyAfterThePlannedFinishTime_andRoundIsInTimeOrder() throws {
+        // --- GIVEN --- an 11:00 visit added before a 9:00 visit (9:00 + 45 min = planned finish 9:45)
         let elevenAM = TestData.visit(for: TestData.arthur, at: TestData.tuesday(hour: 11))
         let nineAM = TestData.visit(for: TestData.margaret, at: TestData.tuesday(hour: 9))
         repository.visits = [elevenAM, nineAM]
         let planTodaysRound = PlanTodaysRoundUseCase(repository: repository)
 
-        // --- WHEN --- the round is checked at exactly 15 and at 16 minutes past nine
-        let roundAtFifteenPast = try planTodaysRound.execute(on: TestData.tuesday(hour: 8), now: TestData.tuesday(hour: 9, minute: 15))
-        let roundAtSixteenPast = try planTodaysRound.execute(on: TestData.tuesday(hour: 8), now: TestData.tuesday(hour: 9, minute: 16))
+        // --- WHEN --- the round is checked exactly at the planned finish, and one minute later
+        let roundAtPlannedFinish = try planTodaysRound.execute(on: TestData.tuesday(hour: 8), now: TestData.tuesday(hour: 9, minute: 45))
+        let roundOneMinuteLater = try planTodaysRound.execute(on: TestData.tuesday(hour: 8), now: TestData.tuesday(hour: 9, minute: 46))
 
         // --- THEN ---
-        #expect(roundAtFifteenPast.nextVisit?.patientName == "Margaret Thompson", "9:00 comes before 11:00")
-        #expect(!roundAtFifteenPast.isRunningLate(nineAM), "Exactly 15 minutes is still on time")
-        #expect(roundAtSixteenPast.isRunningLate(nineAM), "16 minutes is running late")
+        #expect(roundAtPlannedFinish.nextVisit?.patientName == "Margaret Thompson", "9:00 comes before 11:00")
+        #expect(!roundAtPlannedFinish.isOutcomeOverdue(nineAM), "At the planned finish time the outcome is not overdue yet")
+        #expect(roundOneMinuteLater.isOutcomeOverdue(nineAM), "One minute after the planned finish the outcome is overdue")
     }
 }

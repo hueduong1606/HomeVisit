@@ -42,7 +42,8 @@ struct ScheduleVisitView: View {
                                 Text(careType.rawValue).tag(careType)
                             }
                         }
-                        DatePicker("Visit time", selection: $viewModel.scheduledStart)
+                        // Today's round only: times from now until the end of today
+                        DatePicker("Visit time today", selection: $viewModel.scheduledStart, in: viewModel.todaysBookingTimes, displayedComponents: .hourAndMinute)
                         Stepper("Duration: \(viewModel.durationMinutes) min", value: $viewModel.durationMinutes, in: 5...240, step: 5)
                     }
 

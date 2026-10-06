@@ -11,6 +11,7 @@ class CaseloadViewModel: ObservableObject {
     //MARK: - PROPERTIES
     @Published var patients: [Patient] = []
     @Published var referrals: [PatientReferral] = []
+    @Published var errorMessage: String? = nil
 
     let dependencies: AppDependencies
 
@@ -21,9 +22,19 @@ class CaseloadViewModel: ObservableObject {
 
     //MARK: - FUNCTION
 
-    // Re-read the caseload and the App Group referral inbox
+    // Re-read the caseload and the App Group referral inbox.
+    // On failure the previous lists stay on screen and the nurse is told why.
     func loadCaseload() {
-        patients = (try? dependencies.repository.fetchPatients()) ?? []
-        referrals = dependencies.referralInbox.pendingReferrals()
+        do {
+            patients = try dependencies.repository.fetchPatients()
+        } catch {
+            errorMessage = "Your patients could not be loaded. Please try again."
+        }
+
+        do {
+            referrals = try dependencies.referralInbox.pendingReferrals()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }

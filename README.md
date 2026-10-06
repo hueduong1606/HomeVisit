@@ -30,10 +30,10 @@
 
 | # | Screen | What the nurse does |
 |---|---|---|
-| 1 | **Today's Round** | Sees visits still to do in time order, running-late warnings, visits done |
+| 1 | **Today's Round** | Sees visits still to do in time order, *Outcome overdue* warnings, visits done |
 | 2 | **Visit Detail** | Reads the clinical alert and address; opens *Record Visit Outcome* |
 | 3 | **Record Visit Outcome** | Records *Care completed* or *No access* with a clinical note |
-| 4 | **Add Visit to Round** | Books a visit: patient, care type, time, duration |
+| 4 | **Add Visit to Round** | Books a visit for **today**: patient, care type, time, duration |
 | 5 | **Caseload** | Sees *Referrals waiting* (from the Share Extension) and all patients |
 | 6 | **Admit Patient** | Adds a patient by hand or from a shared referral |
 
@@ -51,13 +51,15 @@ View  ──>  ViewModel  ──>  Use Case  ──>  CaseloadRepository (protoc
 
 | Use Case | Business rules | Error enum |
 |---|---|---|
-| `PlanTodaysRoundUseCase` | Visits in time order; a visit is **running late** more than 15 min after its start | `PlanTodaysRoundError` |
-| `ScheduleHomeVisitUseCase` | Patient on caseload · not in the past · **15–180 minutes** · **no clashing visits** | `ScheduleHomeVisitError` |
+| `PlanTodaysRoundUseCase` | Visits in time order; **Outcome overdue** once the planned finish time passes with nothing recorded | `PlanTodaysRoundError` |
+| `ScheduleHomeVisitUseCase` | Patient on caseload · not in the past · **15–180 minutes** · **today only, finishing before midnight** · **no clashing visits** | `ScheduleHomeVisitError` |
 | `RecordVisitOutcomeUseCase` | Outcome recorded **once only** · clinical note **at least 10 characters** | `RecordVisitOutcomeError` |
-| `AdmitPatientToCaseloadUseCase` | Name required · address needs a **street number** · **no duplicates** · referral cleared only after admission | `AdmitPatientError` |
+| `AdmitPatientToCaseloadUseCase` | Name required · address needs a **street number** · **no duplicates** · referral cleared only after admission (and the nurse is told if it couldn't be cleared) | `AdmitPatientError` |
 
 Every error message says **what went wrong and what to do next**, e.g.
 *"This visit overlaps your visit with Arthur Nguyen. Pick a start time after that visit finishes."*
+
+**Reliability:** loading failures show a message instead of an empty list; a failed Core Data save is rolled back and the nurse's typing stays on screen; the widget and reminders are only refreshed after a successful save (and keep their previous data if the round can't be read); App Group files are written atomically and the referral inbox is updated with `NSFileCoordinator`, so an unreadable inbox is never overwritten; reminders say *"Reminder scheduled"* only after iOS confirms, and explain when notifications are turned off. The round, caseload, referrals and widget refresh whenever the app becomes active.
 
 ### Core Data
 
@@ -109,9 +111,9 @@ Do these in order – each step creates the data the next step needs.
 
 ### Step 2 – Add a visit to the round (Screens 1 → 4)
 1. Tap **Today's Round** → **+**.
-2. Choose Margaret, *Wound care*, a time **about 30 minutes from now**, 45 min → **Add to Round**.
+2. Choose Margaret, *Wound care*, a time **about 30 minutes from now** (only today's times can be picked), 45 min → **Add to Round**.
 3. The visit appears under *Still to visit*.
-4. **Error checks:** set the duration to 10 min → "outside the safe range"; book a second visit at an overlapping time → "overlaps your visit with Margaret Thompson".
+4. **Error checks:** set the duration to 10 min → "outside the safe range"; book a visit late in the evening with a long duration → "must finish before midnight"; book a second visit at an overlapping time → "overlaps your visit with Margaret Thompson".
 
 ### Step 3 – Widget (Home Screen and Lock Screen)
 1. Press **⇧⌘H** to go to the Home Screen.
@@ -122,7 +124,7 @@ Do these in order – each step creates the data the next step needs.
 
 ### Step 4 – Visit reminder (Notification Content Extension)
 1. In the app, tap Margaret's visit → **Preview Visit Reminder**.
-2. Within 5 seconds press **⇧⌘H** (Home) or **⌘L** (lock).
+2. Wait until the screen says **"Reminder scheduled – it arrives in 5 seconds"** (if it says reminders are turned off, allow notifications in Settings → Notifications → HomeVisit), then press **⇧⌘H** (Home) or **⌘L** (lock).
 3. When the banner arrives, **click and hold** it (on the Lock Screen, hold the notification). The custom **visit card** opens: time, patient, care type, address and the orange safety alert.
 4. A real reminder is also scheduled automatically 15 minutes before every visit still to do.
 
@@ -131,7 +133,7 @@ Do these in order – each step creates the data the next step needs.
 2. Press and hold a word, drag the handles to select a few lines → tap **Share…** in the menu.
 3. Tap **HomeVisit** in the app row (if it's not shown, scroll the row to **More** and turn HomeVisit on).
 4. In *New Referral*, type patient name `Beatrice Collins` → **Save Referral to HomeVisit**. The share sheet closes.
-5. Open HomeVisit → **Caseload** tab (if it was already open, tap *Today's Round* then *Caseload* to refresh). Beatrice is under **Referrals waiting**.
+5. Open HomeVisit → **Caseload** tab. The app refreshes when it becomes active, so Beatrice is already under **Referrals waiting**.
 6. Tap the referral → the form is pre-filled → add the address `5 Marsden Street, Parramatta` → **Admit to Caseload**. The referral disappears and Beatrice is under *Patients*.
 
 ### Step 6 – Record the visit outcome (Screens 2 → 3)
@@ -164,7 +166,7 @@ Press **⌘U** (or open the Test navigator with **⌘6** and press ▶). All **6
 | 3 | `clinicalNoteWithNineCharacters_isRejected_butTenCharacters_isAccepted` | RecordVisitOutcome | Boundary |
 | 4 | `visitAlreadyDocumented_cannotBeDocumentedAgain` | RecordVisitOutcome | Domain error |
 | 5 | `admittingPatientFromSharedReferral_addsToCaseloadAndClearsTheReferral` | AdmitPatientToCaseload | Happy path |
-| 6 | `visitIsRunningLateOnlyAfterMoreThanFifteenMinutes_andRoundIsInTimeOrder` | PlanTodaysRound | Boundary |
+| 6 | `outcomeIsOverdueOnlyAfterThePlannedFinishTime_andRoundIsInTimeOrder` | PlanTodaysRound | Boundary |
 
 ---
 

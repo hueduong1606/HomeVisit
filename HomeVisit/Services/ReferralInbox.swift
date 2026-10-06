@@ -8,20 +8,20 @@ import Foundation
 
 // MARK: - ReferralInbox
 protocol ReferralInbox {
-    func pendingReferrals() -> [PatientReferral]
-    func removeReferral(id: UUID)
+    func pendingReferrals() throws -> [PatientReferral]
+    func removeReferral(id: UUID) throws
 }
 
 // MARK: - AppGroupReferralInbox
 /// Reads the JSON file the Share Extension writes into the App Group container.
 struct AppGroupReferralInbox: ReferralInbox {
 
-    func pendingReferrals() -> [PatientReferral] {
-        SharedContainerStore.loadReferrals()
+    func pendingReferrals() throws -> [PatientReferral] {
+        try SharedContainerStore.loadReferrals()
     }
 
-    func removeReferral(id: UUID) {
-        SharedContainerStore.removeReferral(id: id)
+    func removeReferral(id: UUID) throws {
+        try SharedContainerStore.removeReferral(id: id)
     }
 }
 

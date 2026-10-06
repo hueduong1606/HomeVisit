@@ -57,11 +57,11 @@ class MockRoundSync: RoundSyncing {
 class MockReferralInbox: ReferralInbox {
     var referrals: [PatientReferral] = []
 
-    func pendingReferrals() -> [PatientReferral] {
+    func pendingReferrals() throws -> [PatientReferral] {
         referrals
     }
 
-    func removeReferral(id: UUID) {
+    func removeReferral(id: UUID) throws {
         referrals.removeAll { $0.id == id }
     }
 }
