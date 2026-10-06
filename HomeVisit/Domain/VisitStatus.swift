@@ -6,31 +6,14 @@
 import Foundation
 
 // MARK: - VisitStatus
-enum VisitStatus: String, Codable {
+enum VisitStatus: String {
     case scheduled = "Scheduled"   // On the round, not yet documented
     case completed = "Completed"   // Care delivered and clinical note written
     case noAccess = "No access"    // Nurse arrived but could not get into the home
 
-    //MARK: - PROPERTIES
     // A visit is closed once its outcome is part of the clinical record
     var isClosed: Bool {
         self != .scheduled
-    }
-
-    var symbolName: String {
-        switch self {
-        case .scheduled:
-            return "clock"
-        case .completed:
-            return "checkmark.circle.fill"
-        case .noAccess:
-            return "door.left.hand.closed"
-        }
-    }
-
-    //MARK: - FUNCTION
-    static func fromStoredValue(_ value: String?) -> VisitStatus {
-        VisitStatus(rawValue: value ?? "") ?? .scheduled
     }
 }
 
@@ -49,16 +32,6 @@ enum VisitOutcome: String, CaseIterable, Identifiable {
             return .completed
         case .noAccess:
             return .noAccess
-        }
-    }
-
-    // Prompt shown above the note field so the nurse knows what to write
-    var notePrompt: String {
-        switch self {
-        case .completed:
-            return "Clinical note: care given, observations, follow-up needed"
-        case .noAccess:
-            return "Reason: e.g. no answer at door, patient in hospital"
         }
     }
 }

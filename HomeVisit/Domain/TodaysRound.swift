@@ -6,12 +6,11 @@
 
 import Foundation
 
-struct TodaysRound: Equatable {
+struct TodaysRound {
     //MARK: - PROPERTIES
-    let day: Date
     let outstandingVisits: [CareVisit]     // Still to visit, earliest first
-    let closedVisits: [CareVisit]          // Completed or no access, latest first
-    let runningLateVisitIDs: Set<UUID>     // Outstanding visits past the lateness threshold
+    let closedVisits: [CareVisit]          // Completed or no access
+    let runningLateVisitIDs: [UUID]        // Outstanding visits past the lateness threshold
 
     //MARK: - COMPUTED PROPERTIES
     // The visit the nurse should drive to next
@@ -23,27 +22,9 @@ struct TodaysRound: Equatable {
         outstandingVisits.count + closedVisits.count
     }
 
-    var completedVisitCount: Int {
-        closedVisits.filter { $0.status == .completed }.count
-    }
-
-    var noAccessVisitCount: Int {
-        closedVisits.filter { $0.status == .noAccess }.count
-    }
-
-    var isRoundComplete: Bool {
-        totalVisitCount > 0 && outstandingVisits.isEmpty
-    }
-
-    // e.g. "3 of 7 visits closed"
+    // e.g. "3 of 7 visits done"
     var progressSummary: String {
-        "\(closedVisits.count) of \(totalVisitCount) visits closed"
-    }
-
-    // Fraction for the progress bar (0...1)
-    var progressFraction: Double {
-        guard totalVisitCount > 0 else { return 0 }
-        return Double(closedVisits.count) / Double(totalVisitCount)
+        "\(closedVisits.count) of \(totalVisitCount) visits done"
     }
 
     //MARK: - FUNCTION
