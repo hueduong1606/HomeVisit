@@ -9,6 +9,7 @@ import Foundation
 enum ScheduleHomeVisitError: LocalizedError, Equatable {
     case patientNotOnCaseload
     case visitTimeInThePast
+    case visitNotWithinToday
     case durationOutsideSafeRange(minutes: Int)
     case clashesWithVisit(patientName: String)
     case roundCouldNotBeSaved
@@ -19,7 +20,9 @@ enum ScheduleHomeVisitError: LocalizedError, Equatable {
         case .patientNotOnCaseload:
             return "This patient is not on your caseload. Admit them from the Caseload tab first, then book the visit."
         case .visitTimeInThePast:
-            return "That visit time has already passed. Choose a time later today or on another day."
+            return "That visit time has already passed. Choose a time later today."
+        case .visitNotWithinToday:
+            return "Visits can only be booked for today's round and must finish before midnight. Choose an earlier start time or a shorter visit."
         case .durationOutsideSafeRange(let minutes):
             return "A \(minutes)-minute visit is outside the safe range of 15–180 minutes. Adjust the duration, or split long care into two visits."
         case .clashesWithVisit(let patientName):
@@ -80,7 +83,14 @@ struct ScheduleHomeVisitUseCase {
             durationMinutes: durationMinutes
         )
 
-        // Rule 4: the nurse cannot be in two homes at once
+        // Rule 4: today's round only – the visit must start today and finish before midnight
+        let calendar = Calendar.current
+        let startOfTomorrow = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now))!
+        guard calendar.isDate(scheduledStart, inSameDayAs: now) && newVisit.scheduledEnd <= startOfTomorrow else {
+            throw ScheduleHomeVisitError.visitNotWithinToday
+        }
+
+        // Rule 5: the nurse cannot be in two homes at once
         let outstandingVisitsThatDay: [CareVisit]
         do {
             outstandingVisitsThatDay = try repository.fetchOutstandingVisits(scheduledOn: scheduledStart)

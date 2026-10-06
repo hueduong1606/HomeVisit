@@ -11,7 +11,7 @@ class ScheduleVisitViewModel: ObservableObject {
     @Published var patients: [Patient] = []
     @Published var selectedPatientID: UUID? = nil
     @Published var careType: CareType = .woundCare
-    @Published var scheduledStart: Date = Date().addingTimeInterval(60 * 60) // One hour from now
+    @Published var scheduledStart: Date = Date().addingTimeInterval(30 * 60) // 30 minutes from now
     @Published var durationMinutes: Int = 45
     @Published var errorMessage: String? = nil
 
@@ -24,11 +24,25 @@ class ScheduleVisitViewModel: ObservableObject {
         self.scheduleHomeVisit = dependencies.makeScheduleHomeVisit()
     }
 
+    //MARK: - COMPUTED PROPERTIES
+    // The date picker only offers times from now until the end of today (today's round only)
+    var todaysBookingTimes: ClosedRange<Date> {
+        let now = Date()
+        let calendar = Calendar.current
+        let startOfTomorrow = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now))!
+        let lastMinuteToday = startOfTomorrow.addingTimeInterval(-60)
+        return now...max(now, lastMinuteToday)
+    }
+
     //MARK: - FUNCTIONS
 
     // Patients for the picker (read through the repository protocol, not Core Data)
     func loadPatients() {
-        patients = (try? repository.fetchPatients()) ?? []
+        do {
+            patients = try repository.fetchPatients()
+        } catch {
+            errorMessage = "Your patients could not be loaded. Please try again."
+        }
     }
 
     // Returns true when the visit is on the round
