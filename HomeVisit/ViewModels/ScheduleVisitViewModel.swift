@@ -25,13 +25,12 @@ class ScheduleVisitViewModel: ObservableObject {
     }
 
     //MARK: - COMPUTED PROPERTIES
-    // The date picker only offers times from now until the end of today (today's round only)
-    var todaysBookingTimes: ClosedRange<Date> {
+    // The date picker offers times from now until the end of the planning window (today + 14 days)
+    var bookingTimes: ClosedRange<Date> {
         let now = Date()
         let calendar = Calendar.current
-        let startOfTomorrow = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now))!
-        let lastMinuteToday = startOfTomorrow.addingTimeInterval(-60)
-        return now...max(now, lastMinuteToday)
+        let endOfPlanningWindow = calendar.date(byAdding: .day, value: ScheduleHomeVisitUseCase.planningWindowDays + 1, to: calendar.startOfDay(for: now))!
+        return now...endOfPlanningWindow.addingTimeInterval(-60)
     }
 
     //MARK: - FUNCTIONS

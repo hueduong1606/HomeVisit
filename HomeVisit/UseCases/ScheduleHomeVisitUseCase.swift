@@ -9,7 +9,8 @@ import Foundation
 enum ScheduleHomeVisitError: LocalizedError, Equatable {
     case patientNotOnCaseload
     case visitTimeInThePast
-    case visitNotWithinToday
+    case visitBeyondPlanningWindow(days: Int)
+    case visitRunsPastMidnight
     case durationOutsideSafeRange(minutes: Int)
     case clashesWithVisit(patientName: String)
     case roundCouldNotBeSaved
@@ -20,9 +21,11 @@ enum ScheduleHomeVisitError: LocalizedError, Equatable {
         case .patientNotOnCaseload:
             return "This patient is not on your caseload. Admit them from the Caseload tab first, then book the visit."
         case .visitTimeInThePast:
-            return "That visit time has already passed. Choose a time later today."
-        case .visitNotWithinToday:
-            return "Visits can only be booked for today's round and must finish before midnight. Choose an earlier start time or a shorter visit."
+            return "That visit time has already passed. Choose a time later today or on a coming day."
+        case .visitBeyondPlanningWindow(let days):
+            return "Visits can be planned up to \(days) days ahead. Choose an earlier date, or book this visit closer to the time."
+        case .visitRunsPastMidnight:
+            return "This visit would finish after midnight. Choose an earlier start time or a shorter visit."
         case .durationOutsideSafeRange(let minutes):
             return "A \(minutes)-minute visit is outside the safe range of 15–180 minutes. Adjust the duration, or split long care into two visits."
         case .clashesWithVisit(let patientName):
@@ -42,6 +45,8 @@ struct ScheduleHomeVisitUseCase {
 
     // Business rule: shortest and longest visit a nurse can safely book
     static let safeDurationRange = 15...180
+    // Business rule: rounds can be planned today and up to 14 days ahead (e.g. tomorrow's round the day before)
+    static let planningWindowDays = 14
 
     //MARK: - FUNCTION
     func execute(
@@ -83,14 +88,20 @@ struct ScheduleHomeVisitUseCase {
             durationMinutes: durationMinutes
         )
 
-        // Rule 4: today's round only – the visit must start today and finish before midnight
+        // Rule 4: within the planning window (today + 14 days)
         let calendar = Calendar.current
-        let startOfTomorrow = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now))!
-        guard calendar.isDate(scheduledStart, inSameDayAs: now) && newVisit.scheduledEnd <= startOfTomorrow else {
-            throw ScheduleHomeVisitError.visitNotWithinToday
+        let endOfPlanningWindow = calendar.date(byAdding: .day, value: ScheduleHomeVisitUseCase.planningWindowDays + 1, to: calendar.startOfDay(for: now))!
+        guard scheduledStart < endOfPlanningWindow else {
+            throw ScheduleHomeVisitError.visitBeyondPlanningWindow(days: ScheduleHomeVisitUseCase.planningWindowDays)
         }
 
-        // Rule 5: the nurse cannot be in two homes at once
+        // Rule 5: a visit belongs to one day's round, so it must finish before midnight
+        let startOfNextDay = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: scheduledStart))!
+        guard newVisit.scheduledEnd <= startOfNextDay else {
+            throw ScheduleHomeVisitError.visitRunsPastMidnight
+        }
+
+        // Rule 6: the nurse cannot be in two homes at once
         let outstandingVisitsThatDay: [CareVisit]
         do {
             outstandingVisitsThatDay = try repository.fetchOutstandingVisits(scheduledOn: scheduledStart)
