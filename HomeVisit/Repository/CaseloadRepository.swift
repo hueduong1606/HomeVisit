@@ -21,6 +21,8 @@ protocol CaseloadRepository {
     func fetchVisits(scheduledOn day: Date) throws -> [CareVisit]
     // Domain query: visits on a day that the nurse has not documented yet, earliest first
     func fetchOutstandingVisits(scheduledOn day: Date) throws -> [CareVisit]
+    // Domain query: visits booked for the coming days that are still to do, earliest first
+    func fetchOutstandingVisits(from start: Date, before end: Date) throws -> [CareVisit]
     // Inserts a new visit or updates the existing one with the same id
     func saveVisit(_ visit: CareVisit) throws
 }

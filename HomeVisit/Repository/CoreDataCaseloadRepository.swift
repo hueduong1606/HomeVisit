@@ -73,6 +73,19 @@ class CoreDataCaseloadRepository: CaseloadRepository {
         return try context.fetch(fetchRequest).map { toCareVisit($0) }
     }
 
+    // Domain query: "fetch all visits still to do between these two times" (planning ahead)
+    func fetchOutstandingVisits(from start: Date, before end: Date) throws -> [CareVisit] {
+        let fetchRequest: NSFetchRequest<CareVisitRecord> = CareVisitRecord.fetchRequest()
+        fetchRequest.predicate = NSPredicate(
+            format: "scheduledStart >= %@ AND scheduledStart < %@ AND statusRaw == %@",
+            start as NSDate,
+            end as NSDate,
+            VisitStatus.scheduled.rawValue
+        )
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \CareVisitRecord.scheduledStart, ascending: true)]
+        return try context.fetch(fetchRequest).map { toCareVisit($0) }
+    }
+
     // Insert a new visit, or update the existing one with the same id
     func saveVisit(_ visit: CareVisit) throws {
         guard let patientRecord = try findPatientRecord(id: visit.patientID) else {

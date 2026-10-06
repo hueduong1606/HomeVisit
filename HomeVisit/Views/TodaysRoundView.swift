@@ -48,6 +48,23 @@ struct TodaysRoundView: View {
                             } //: ForEach
                         } //: Section
                     }
+
+                    // Planned ahead – booked for the coming days
+                    if !viewModel.comingUpVisits.isEmpty {
+                        Section(header: Text("Coming up")) {
+                            ForEach(viewModel.comingUpVisits) { visit in
+                                NavigationLink(destination: VisitDetailView(visit: visit, dependencies: viewModel.dependencies)) {
+                                    VStack(alignment: .leading) {
+                                        Text(visit.scheduledStart, style: .date)
+                                            .font(.caption)
+                                            .bold()
+                                            .foregroundColor(.secondary)
+                                        VisitCardView(visit: visit)
+                                    }
+                                }
+                            } //: ForEach
+                        } //: Section
+                    }
                 } //: List
 
                 // Error banner – appears on top when a Use Case rejects an action

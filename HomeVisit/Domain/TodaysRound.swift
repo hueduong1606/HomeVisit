@@ -11,6 +11,7 @@ struct TodaysRound {
     let outstandingVisits: [CareVisit]     // Still to visit, earliest first
     let closedVisits: [CareVisit]          // Completed or no access
     let outcomeOverdueVisitIDs: [UUID]     // Past their planned finish time with no outcome recorded
+    let comingUpVisits: [CareVisit]        // Booked for the coming days, earliest first
 
     //MARK: - COMPUTED PROPERTIES
     // The visit the nurse should drive to next

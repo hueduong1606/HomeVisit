@@ -31,6 +31,10 @@ class TodaysRoundViewModel: ObservableObject {
         round?.closedVisits ?? []
     }
 
+    var comingUpVisits: [CareVisit] {
+        round?.comingUpVisits ?? []
+    }
+
     var progressSummary: String {
         round?.progressSummary ?? ""
     }
